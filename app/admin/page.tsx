@@ -1,0 +1,159 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
+import AdminSidebar from '@/components/AdminSidebar'
+import Link from 'next/link'
+import { GDV } from '@/lib/types'
+
+export default function AdminDashboard() {
+  const [loading, setLoading] = useState(true)
+  const [gdvList, setGdvList] = useState<GDV[]>([])
+  const router = useRouter()
+
+  useEffect(() => {
+    checkAuth()
+    fetchGDVs()
+  }, [])
+
+  const checkAuth = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      router.push('/admin/login')
+    }
+    setLoading(false)
+  }
+
+  const fetchGDVs = async () => {
+    const { data } = await supabase
+      .from('gdv')
+      .select('*')
+      .order('created_at', { ascending: false })
+    
+    if (data) setGdvList(data)
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa GDV này?')) {
+      return
+    }
+
+    try {
+      const { error } = await supabase
+        .from('gdv')
+        .delete()
+        .eq('id', id)
+
+      if (error) throw error
+
+      alert('Xóa thành công!')
+      fetchGDVs()
+    } catch (err: any) {
+      alert('Lỗi: ' + err.message)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="lg:col-span-1">
+          <AdminSidebar />
+        </div>
+        
+        <div className="lg:col-span-3">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-2xl font-bold text-gray-900">
+                Quản lý GDV
+              </h1>
+              <Link
+                href="/admin/add"
+                className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md font-medium"
+              >
+                ➕ Thêm mới
+              </Link>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Họ tên
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Chi nhánh
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      SĐT
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Thao tác
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {gdvList.map((gdv) => (
+                    <tr key={gdv.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {gdv.ho_ten}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500">
+                          {gdv.chi_nhanh || '-'}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500">
+                          {gdv.sdt || '-'}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <Link
+                          href={`/gdv/${gdv.id}`}
+                          className="text-primary-600 hover:text-primary-900"
+                        >
+                          Xem
+                        </Link>
+                        <Link
+                          href={`/admin/edit/${gdv.id}`}
+                          className="text-yellow-600 hover:text-yellow-900"
+                        >
+                          Sửa
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(gdv.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          Xóa
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {gdvList.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  Chưa có GDV nào
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
