@@ -1,10 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'GDV Manager - Quản lý Giao dịch viên',
@@ -18,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
-      <body className={inter.className}>
+      <body className="font-sans">
         <div className="min-h-screen flex flex-col">
           <Navbar />
           <main className="flex-grow">

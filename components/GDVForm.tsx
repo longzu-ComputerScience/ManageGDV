@@ -49,7 +49,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value || null,
     })
   }
 
@@ -69,7 +69,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
           type="text"
           id="ho_ten"
           name="ho_ten"
-          value={formData.ho_ten}
+          value={formData.ho_ten || ''}
           onChange={handleChange}
           required
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -86,7 +86,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
             type="tel"
             id="sdt"
             name="sdt"
-            value={formData.sdt}
+            value={formData.sdt || ''}
             onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             placeholder="0123456789"
@@ -101,7 +101,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
             type="email"
             id="email"
             name="email"
-            value={formData.email}
+            value={formData.email || ''}
             onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             placeholder="email@example.com"
@@ -118,7 +118,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
             type="text"
             id="facebook"
             name="facebook"
-            value={formData.facebook}
+            value={formData.facebook || ''}
             onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             placeholder="facebook.com/username hoặc username"
@@ -133,7 +133,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
             type="text"
             id="zalo"
             name="zalo"
-            value={formData.zalo}
+            value={formData.zalo || ''}
             onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             placeholder="Số Zalo"
@@ -149,7 +149,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
           type="text"
           id="chi_nhanh"
           name="chi_nhanh"
-          value={formData.chi_nhanh}
+          value={formData.chi_nhanh || ''}
           onChange={handleChange}
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           placeholder="Nhập chi nhánh làm việc"
@@ -164,7 +164,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
           type="text"
           id="dia_chi"
           name="dia_chi"
-          value={formData.dia_chi}
+          value={formData.dia_chi || ''}
           onChange={handleChange}
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           placeholder="Nhập địa chỉ"
@@ -179,7 +179,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
           type="url"
           id="avatar_url"
           name="avatar_url"
-          value={formData.avatar_url}
+          value={formData.avatar_url || ''}
           onChange={handleChange}
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           placeholder="https://example.com/avatar.jpg"
@@ -193,7 +193,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
         <textarea
           id="mo_ta"
           name="mo_ta"
-          value={formData.mo_ta}
+          value={formData.mo_ta || ''}
           onChange={handleChange}
           rows={4}
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
