@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { GDV } from '@/lib/types'
 import GDVCard from '@/components/GDVCard'
 
@@ -31,6 +31,12 @@ export default function HomePage() {
 
   const fetchGDVs = async () => {
     try {
+      if (!isSupabaseConfigured()) {
+        setError('Supabase chưa được cấu hình. Vui lòng kiểm tra file .env.local')
+        setLoading(false)
+        return
+      }
+
       const { data, error } = await supabase
         .from('gdv')
         .select('*')
@@ -64,7 +70,7 @@ export default function HomePage() {
         <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
           <p className="font-semibold">Lỗi:</p>
           <p>{error}</p>
-          <p className="mt-2 text-sm">Vui lòng kiểm tra cấu hình Supabase trong file .env</p>
+          <p className="mt-2 text-sm">Vui lòng kiểm tra cấu hình Supabase trong file .env.local</p>
         </div>
       </div>
     )

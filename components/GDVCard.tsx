@@ -39,7 +39,11 @@ export default function GDVCard({ gdv }: GDVCardProps) {
             </p>
           )}
           {gdv.mo_ta && (
-            <p className="text-sm text-gray-500 line-clamp-2 mt-3">
+            <p className="text-sm text-gray-500 mt-3 overflow-hidden" style={{ 
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+            }}>
               {gdv.mo_ta}
             </p>
           )}
