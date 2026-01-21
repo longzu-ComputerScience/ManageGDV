@@ -4,50 +4,38 @@ import { GDV } from '@/lib/types'
 
 interface GDVCardProps {
   gdv: GDV
+  index: number
 }
 
-export default function GDVCard({ gdv }: GDVCardProps) {
+export default function GDVCard({ gdv, index }: GDVCardProps) {
   return (
     <Link href={`/gdv/${gdv.id}`}>
-      <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer">
-        <div className="relative h-48 bg-gradient-to-br from-primary-100 to-primary-200">
+      <div className="group flex flex-col items-center text-center p-4 hover:bg-gray-50 rounded-lg transition-all duration-300 cursor-pointer relative">
+        {/* Sequential number badge */}
+        <div className="absolute top-2 left-2 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md z-10" aria-label={`Vị trí ${index}`}>
+          {index}
+        </div>
+        
+        {/* Circular Avatar */}
+        <div className="relative w-28 h-28 mb-3">
           {gdv.avatar_url ? (
             <Image
               src={gdv.avatar_url}
               alt={gdv.ho_ten}
               fill
-              className="object-cover"
+              className="object-cover rounded-full border-4 border-primary-200 group-hover:border-primary-400 transition-colors"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="w-24 h-24 bg-primary-500 rounded-full flex items-center justify-center text-white text-4xl font-bold">
-                {gdv.ho_ten.charAt(0).toUpperCase()}
-              </div>
+            <div className="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white text-3xl font-bold border-4 border-primary-200 group-hover:border-primary-400 transition-colors">
+              {gdv.ho_ten.charAt(0).toUpperCase()}
             </div>
           )}
         </div>
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-2">{gdv.ho_ten}</h3>
-          {gdv.chi_nhanh && (
-            <p className="text-sm text-gray-600 mb-2">
-              <span className="font-semibold">Chi nhánh:</span> {gdv.chi_nhanh}
-            </p>
-          )}
-          {gdv.sdt && (
-            <p className="text-sm text-gray-600 mb-2">
-              <span className="font-semibold">SĐT:</span> {gdv.sdt}
-            </p>
-          )}
-          {gdv.mo_ta && (
-            <p className="text-sm text-gray-500 mt-3 overflow-hidden" style={{ 
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-            }}>
-              {gdv.mo_ta}
-            </p>
-          )}
-        </div>
+
+        {/* Name */}
+        <h3 className="text-base font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+          {gdv.ho_ten}
+        </h3>
       </div>
     </Link>
   )
