@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS gdv (
   chi_nhanh VARCHAR(255),
   avatar_url TEXT,
   mo_ta TEXT,
+  so_tai_khoan VARCHAR(50),
+  ngan_hang VARCHAR(255),
+  thu_tu INTEGER DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

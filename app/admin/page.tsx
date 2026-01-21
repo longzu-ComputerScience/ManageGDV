@@ -29,7 +29,7 @@ export default function AdminDashboard() {
     const { data } = await supabase
       .from('gdv')
       .select('*')
-      .order('created_at', { ascending: false })
+      .order('thu_tu', { ascending: true })
     
     if (data) setGdvList(data)
   }
@@ -89,6 +89,9 @@ export default function AdminDashboard() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
+                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
+                      STT
+                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Họ tên
                     </th>
@@ -106,6 +109,11 @@ export default function AdminDashboard() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {gdvList.map((gdv) => (
                     <tr key={gdv.id}>
+                      <td className="px-4 py-4 whitespace-nowrap text-center">
+                        <span className="inline-flex items-center justify-center w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold">
+                          {gdv.thu_tu || 0}
+                        </span>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
                           {gdv.ho_ten}
