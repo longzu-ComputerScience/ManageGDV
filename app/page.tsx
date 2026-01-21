@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { GDV } from '@/lib/types'
-import GDVCard from '@/components/GDVCard'
+import GDVGridItem from '@/components/GDVGridItem'
+import GDVModal from '@/components/GDVModal'
 
 export default function HomePage() {
   const [gdvList, setGdvList] = useState<GDV[]>([])
@@ -11,6 +12,8 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [selectedGdv, setSelectedGdv] = useState<GDV | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     fetchGDVs()
@@ -51,6 +54,17 @@ export default function HomePage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleGdvClick = (gdv: GDV) => {
+    setSelectedGdv(gdv)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    // Optional: Clear selected GDV after animation completes
+    setTimeout(() => setSelectedGdv(null), 300)
   }
 
   if (loading) {
@@ -106,11 +120,26 @@ export default function HomePage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredGdvList.map((gdv) => (
-            <GDVCard key={gdv.id} gdv={gdv} />
-          ))}
-        </div>
+        <>
+          {/* Grid of GDV items */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8 justify-items-center">
+            {filteredGdvList.map((gdv, index) => (
+              <GDVGridItem 
+                key={gdv.id} 
+                gdv={gdv} 
+                index={index}
+                onClick={() => handleGdvClick(gdv)} 
+              />
+            ))}
+          </div>
+          
+          {/* Modal for detailed view */}
+          <GDVModal 
+            gdv={selectedGdv}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+          />
+        </>
       )}
     </div>
   )

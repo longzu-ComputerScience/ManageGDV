@@ -5,7 +5,14 @@ Website quản lý thông tin Giao dịch viên (GDV) được xây dựng với
 ## 🎯 Tính năng
 
 ### Dành cho người dùng (không cần đăng nhập):
-- ✅ Xem danh sách tất cả Giao dịch viên
+- ✅ Xem danh sách tất cả Giao dịch viên trong giao diện lưới (grid view)
+  - Hiển thị avatar hình tròn với tên và số thứ tự
+  - Giao diện responsive tối ưu cho mọi kích thước màn hình
+  - Bố cục lưới linh hoạt: 2 cột (mobile), 3-4 cột (tablet), 5-6 cột (desktop)
+- ✅ Click vào avatar để xem thông tin chi tiết trong modal:
+  - Chỉ tải thông tin chi tiết khi người dùng click (lazy loading)
+  - Modal hiển thị đầy đủ thông tin GDV
+  - Đóng modal bằng nút X, click ngoài modal, hoặc phím ESC
 - ✅ Tìm kiếm GDV theo tên, chi nhánh, số điện thoại
 - ✅ Click vào từng GDV để xem thông tin chi tiết:
   - Họ tên
@@ -173,8 +180,12 @@ Bạn có thể tạm thời cho phép signup public và tạo user qua API, sau
 
 ### 4. Test Website
 
-1. **Trang chủ** (`/`): Xem danh sách GDV
-2. **Chi tiết GDV** (`/gdv/[id]`): Click vào 1 GDV để xem chi tiết
+1. **Trang chủ** (`/`): Xem danh sách GDV trong giao diện lưới
+   - Grid view với avatar hình tròn
+   - Click vào bất kỳ GDV nào để xem chi tiết trong modal
+   - Sử dụng thanh tìm kiếm để lọc GDV
+   - Modal tự động đóng khi click ra ngoài hoặc nhấn ESC
+2. **Chi tiết GDV** (`/gdv/[id]`): Vẫn có thể truy cập trực tiếp qua URL (tương thích ngược)
 3. **Admin Login** (`/admin/login`): Đăng nhập với tài khoản admin
 4. **Admin Dashboard** (`/admin`): Quản lý danh sách GDV
 5. **Thêm GDV** (`/admin/add`): Thêm GDV mới
@@ -244,7 +255,9 @@ ManageGDV/
 ├── components/              # React components
 │   ├── Navbar.tsx
 │   ├── Footer.tsx
-│   ├── GDVCard.tsx
+│   ├── GDVCard.tsx         # [Legacy] Card view component
+│   ├── GDVGridItem.tsx     # [New] Grid item with circular avatar
+│   ├── GDVModal.tsx        # [New] Modal for detailed view
 │   ├── GDVDetail.tsx
 │   ├── GDVForm.tsx
 │   └── AdminSidebar.tsx
@@ -271,6 +284,39 @@ ManageGDV/
 - ✅ HTTPS required khi deploy
 
 ## 🎨 Customization
+
+### Giao diện Grid View
+
+Trang chủ hiện sử dụng giao diện lưới (grid view) để hiển thị danh sách GDV:
+
+**Đặc điểm:**
+- Avatar hình tròn với gradient background
+- Label hiển thị số thứ tự và tên GDV
+- Responsive grid: tự động điều chỉnh số cột theo kích thước màn hình
+  - Mobile (< 640px): 2 cột
+  - Tablet (640-768px): 3 cột
+  - Desktop nhỏ (768-1024px): 4 cột
+  - Desktop (1024-1280px): 5 cột
+  - Desktop lớn (> 1280px): 6 cột
+- Click vào avatar để xem chi tiết trong modal
+- Modal có thể đóng bằng:
+  - Click nút X ở góc trên bên phải
+  - Click ra ngoài vùng modal
+  - Nhấn phím ESC
+
+**Tùy chỉnh giao diện Grid:**
+
+Chỉnh kích thước avatar trong `components/GDVGridItem.tsx`:
+```tsx
+// Thay đổi class w-* h-* để điều chỉnh kích thước
+<div className="relative w-32 h-32 rounded-full ...">
+```
+
+Chỉnh số cột grid trong `app/page.tsx`:
+```tsx
+// Điều chỉnh grid-cols-* để thay đổi số cột ở từng breakpoint
+<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ...">
+```
 
 ### Đổi màu sắc
 Edit file `tailwind.config.js`:
