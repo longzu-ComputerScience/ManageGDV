@@ -12,7 +12,7 @@ export default function GDVCard({ gdv, index }: GDVCardProps) {
     <Link href={`/gdv/${gdv.id}`}>
       <div className="group flex flex-col items-center text-center p-4 hover:bg-gray-50 rounded-lg transition-all duration-300 cursor-pointer relative">
         {/* Sequential number badge */}
-        <div className="absolute top-2 left-2 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md z-10">
+        <div className="absolute top-2 left-2 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md z-10" aria-label={`Vị trí ${index}`}>
           {index}
         </div>
         
