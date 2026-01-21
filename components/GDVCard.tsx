@@ -38,7 +38,7 @@ export default function GDVCard({ gdv, index }: GDVCardProps) {
         </div>
 
         {/* Name - centered, max 2 lines */}
-        <h3 className="mt-4 text-center text-base font-semibold text-gray-900 group-hover:text-primary-600 transition-colors duration-300 line-clamp-2 w-36 px-2">
+        <h3 className="mt-4 text-center text-base font-semibold text-gray-900 group-hover:text-primary-600 transition-colors duration-300 line-clamp-2 max-w-[144px] px-2">
           {gdv.ho_ten}
         </h3>
       </div>
