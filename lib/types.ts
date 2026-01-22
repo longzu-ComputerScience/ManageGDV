@@ -7,6 +7,7 @@ export interface GDV {
   zalo?: string | null
   dia_chi?: string | null
   dich_vu?: string | null
+  so_tien_coc?: number | null   // ✅ thêm dòng này
   avatar_url?: string | null
   mo_ta?: string | null
   so_tai_khoan?: string | null
@@ -15,6 +16,7 @@ export interface GDV {
   created_at?: string
   updated_at?: string
 }
+
 
 export interface GDVFormData {
   ho_ten: string
