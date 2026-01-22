@@ -11,6 +11,7 @@ import { GDV } from '@/lib/types'
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [gdvList, setGdvList] = useState<GDV[]>([])
+  const [navigatingId, setNavigatingId] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -52,6 +53,17 @@ export default function AdminDashboard() {
       fetchGDVs()
     } catch (err: any) {
       showToast('Lỗi: ' + err.message, 'error')
+    }
+  }
+
+  const navigateTo = async (path: string, id: string) => {
+    try {
+      setNavigatingId(id)
+      await router.push(path)
+    } catch (err) {
+      // ignore
+    } finally {
+      setNavigatingId(null)
     }
   }
 
@@ -131,18 +143,36 @@ export default function AdminDashboard() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        <Link
-                          href={`/gdv/${gdv.id}`}
-                          className="text-primary-600 hover:text-primary-900"
+                        <button
+                          onClick={() => navigateTo(`/gdv/${gdv.id}`, gdv.id)}
+                          disabled={!!navigatingId}
+                          className="text-primary-600 hover:text-primary-900 disabled:opacity-50"
+                          title="Xem"
                         >
-                          Xem
-                        </Link>
-                        <Link
-                          href={`/admin/edit/${gdv.id}`}
-                          className="text-yellow-600 hover:text-yellow-900"
+                          {navigatingId === gdv.id ? (
+                            <span className="inline-flex items-center gap-2">
+                              <svg className="w-4 h-4 animate-spin text-primary-600" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeDasharray="31.415,31.415"/></svg>
+                              <span>Đang chuyển...</span>
+                            </span>
+                          ) : (
+                            'Xem'
+                          )}
+                        </button>
+                        <button
+                          onClick={() => navigateTo(`/admin/edit/${gdv.id}`, gdv.id)}
+                          disabled={!!navigatingId}
+                          className="text-yellow-600 hover:text-yellow-900 disabled:opacity-50"
+                          title="Sửa"
                         >
-                          Sửa
-                        </Link>
+                          {navigatingId === gdv.id ? (
+                            <span className="inline-flex items-center gap-2">
+                              <svg className="w-4 h-4 animate-spin text-yellow-600" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeDasharray="31.415,31.415"/></svg>
+                              <span>Đang chuyển...</span>
+                            </span>
+                          ) : (
+                            'Sửa'
+                          )}
+                        </button>
                         <button
                           onClick={() => handleDelete(gdv.id)}
                           className="text-red-600 hover:text-red-900"

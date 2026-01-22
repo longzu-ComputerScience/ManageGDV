@@ -9,16 +9,16 @@ interface GDVAvatarProps {
   onClick: () => void
 }
 
-// Gradient colors cho default avatar - tone tím hồng
+// Gradient colors cho default avatar - tông mát (teal -> indigo -> cyan)
 const gradients = [
-  'from-violet-500 to-fuchsia-500',
-  'from-purple-500 to-pink-500',
-  'from-fuchsia-500 to-rose-500',
-  'from-indigo-500 to-violet-500',
-  'from-pink-500 to-fuchsia-500',
-  'from-violet-400 to-purple-500',
-  'from-fuchsia-400 to-pink-500',
-  'from-purple-400 to-fuchsia-500',
+  'from-teal-400 to-cyan-500',
+  'from-cyan-500 to-indigo-600',
+  'from-teal-500 to-indigo-500',
+  'from-sky-400 to-indigo-500',
+  'from-cyan-400 to-sky-500',
+  'from-blue-400 to-teal-500',
+  'from-emerald-400 to-teal-500',
+  'from-sky-500 to-cyan-500',
 ]
 
 export default function GDVAvatar({ gdv, index, onClick }: GDVAvatarProps) {
@@ -52,9 +52,11 @@ export default function GDVAvatar({ gdv, index, onClick }: GDVAvatarProps) {
           )}
         </div>
         
-        {/* Số thứ tự - badge đẹp hơn */}
-        <div className="absolute -top-1 -left-1 w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg ring-2 ring-white group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-          {index}
+        {/* Số thứ tự - compact professional badge */}
+        <div className="absolute -top-2 -left-2 flex items-center gap-2 bg-white/8 backdrop-blur-sm border border-white/10 rounded-md px-2 py-0.5 shadow-sm group-hover:scale-105 transition-transform duration-200">
+          <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-indigo-600 text-white text-xs font-semibold shadow-sm">
+            {index}
+          </div>
         </div>
       </div>
       
