@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { showToast } from '@/lib/toast'
 import { useRouter } from 'next/navigation'
 import AdminSidebar from '@/components/AdminSidebar'
 import GDVForm from '@/components/GDVForm'
@@ -33,7 +34,7 @@ export default function EditGDVPage({ params }: { params: { id: string } }) {
       .single()
 
     if (error) {
-      alert('Lỗi: ' + error.message)
+      showToast('Lỗi: ' + error.message, 'error')
       router.push('/admin')
       return
     }
@@ -55,7 +56,7 @@ export default function EditGDVPage({ params }: { params: { id: string } }) {
       throw new Error(error.message)
     }
 
-    alert('Cập nhật thành công!')
+    showToast('Cập nhật thành công!', 'success')
     router.push('/admin')
   }
 

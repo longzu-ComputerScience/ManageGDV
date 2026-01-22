@@ -28,11 +28,19 @@ export default function GDVCard({ gdv }: GDVCardProps) {
         </div>
         <div className="p-6">
           <h3 className="text-xl font-bold text-gray-900 mb-2">{gdv.ho_ten}</h3>
-          {gdv.chi_nhanh && (
-            <p className="text-sm text-gray-600 mb-2">
-              <span className="font-semibold">Chi nhánh:</span> {gdv.chi_nhanh}
-            </p>
-          )}
+          <div className="flex items-center gap-3 mb-2">
+            {gdv.dich_vu && (
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-semibold shadow-sm">
+                {gdv.dich_vu}
+              </span>
+            )}
+
+            {typeof gdv.so_tien_coc === 'number' && (
+              <span className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold shadow-sm">
+                {new Intl.NumberFormat('vi-VN').format(gdv.so_tien_coc)} ₫
+              </span>
+            )}
+          </div>
           {gdv.sdt && (
             <p className="text-sm text-gray-600 mb-2">
               <span className="font-semibold">SĐT:</span> {gdv.sdt}

@@ -18,7 +18,8 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
       facebook: '',
       zalo: '',
       dia_chi: '',
-      chi_nhanh: '',
+      dich_vu: '',
+      so_tien_coc: null,
       avatar_url: '',
       mo_ta: '',
       so_tai_khoan: '',
@@ -50,9 +51,10 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value || null,
+      [name]: name === 'so_tien_coc' ? (value === '' ? null : parseFloat(value)) : (value || null),
     })
   }
 
@@ -164,17 +166,33 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
       </div>
 
       <div>
-        <label htmlFor="chi_nhanh" className="block text-sm font-medium text-gray-700 mb-2">
-          Chi nhánh
+        <label htmlFor="dich_vu" className="block text-sm font-medium text-gray-700 mb-2">
+          Dịch vụ
         </label>
         <input
           type="text"
-          id="chi_nhanh"
-          name="chi_nhanh"
-          value={formData.chi_nhanh || ''}
+          id="dich_vu"
+          name="dich_vu"
+          value={formData.dich_vu || ''}
           onChange={handleChange}
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          placeholder="Nhập chi nhánh làm việc"
+          placeholder="Nhập dịch vụ (ví dụ: mxh, game, ...)"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="so_tien_coc" className="block text-sm font-medium text-gray-700 mb-2">
+          Số tiền cọc (VND)
+        </label>
+        <input
+          type="number"
+          id="so_tien_coc"
+          name="so_tien_coc"
+          value={formData.so_tien_coc ?? ''}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          placeholder="Nhập số tiền cọc"
+          min={0}
         />
       </div>
 

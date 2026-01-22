@@ -22,7 +22,7 @@ export default function HomePage() {
     if (searchTerm) {
       const filtered = gdvList.filter(gdv =>
         gdv.ho_ten.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        gdv.chi_nhanh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        gdv.dich_vu?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         gdv.sdt?.includes(searchTerm)
       )
       setFilteredGdvList(filtered)
@@ -109,7 +109,7 @@ export default function HomePage() {
           </div>
           <input
             type="text"
-            placeholder="Tìm kiếm theo tên, chi nhánh, số điện thoại..."
+            placeholder="Tìm kiếm theo tên, dịch vụ, số điện thoại..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-16 pr-12 py-4 bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-2xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent shadow-lg shadow-slate-200/50 transition-all duration-300"

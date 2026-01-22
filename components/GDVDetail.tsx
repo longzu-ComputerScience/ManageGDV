@@ -32,10 +32,21 @@ export default function GDVDetail({ gdv }: GDVDetailProps) {
           <h1 className="text-3xl font-bold text-gray-900 mb-6">{gdv.ho_ten}</h1>
           
           <div className="space-y-4">
-            {gdv.chi_nhanh && (
-              <div className="flex items-start">
-                <div className="w-32 font-semibold text-gray-700">Chi nhánh:</div>
-                <div className="flex-1 text-gray-900">{gdv.chi_nhanh}</div>
+            {(gdv.dich_vu || typeof gdv.so_tien_coc === 'number') && (
+              <div className="flex flex-wrap items-center gap-3">
+                {gdv.dich_vu && (
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-semibold shadow-md">
+                    <svg className="w-4 h-4 opacity-90" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8L12 2Z" fill="white"/></svg>
+                    {gdv.dich_vu}
+                  </span>
+                )}
+
+                {typeof gdv.so_tien_coc === 'number' && (
+                  <span className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 text-white text-lg font-bold shadow-lg animate-pulse">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 1C7.03 1 3 5.03 3 10C3 14.97 7.03 19 12 19C16.97 19 21 14.97 21 10C21 5.03 16.97 1 12 1ZM12 17C8.13 17 5 13.87 5 10C5 6.13 8.13 3 12 3C15.87 3 19 6.13 19 10C19 13.87 15.87 17 12 17Z" fill="white"/><path d="M11 7H13V11H15V13H13V15H11V13H9V11H11V7Z" fill="white"/></svg>
+                    {new Intl.NumberFormat('vi-VN').format(gdv.so_tien_coc)} ₫
+                  </span>
+                )}
               </div>
             )}
             

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { showToast } from '@/lib/toast'
 import { useRouter } from 'next/navigation'
 import AdminSidebar from '@/components/AdminSidebar'
 import Link from 'next/link'
@@ -47,10 +48,10 @@ export default function AdminDashboard() {
 
       if (error) throw error
 
-      alert('Xóa thành công!')
+      showToast('Xóa thành công!', 'success')
       fetchGDVs()
     } catch (err: any) {
-      alert('Lỗi: ' + err.message)
+      showToast('Lỗi: ' + err.message, 'error')
     }
   }
 
@@ -96,7 +97,7 @@ export default function AdminDashboard() {
                       Họ tên
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Chi nhánh
+                      Dịch vụ
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       SĐT
@@ -121,7 +122,7 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-500">
-                          {gdv.chi_nhanh || '-'}
+                          {gdv.dich_vu || '-'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

@@ -6,13 +6,13 @@ Website quản lý thông tin Giao dịch viên (GDV) được xây dựng với
 
 ### Dành cho người dùng (không cần đăng nhập):
 - ✅ Xem danh sách tất cả Giao dịch viên
-- ✅ Tìm kiếm GDV theo tên, chi nhánh, số điện thoại
+- ✅ Tìm kiếm GDV theo tên, dịch vụ, số điện thoại
 - ✅ Click vào từng GDV để xem thông tin chi tiết:
   - Họ tên
   - Số điện thoại (SĐT)
   - Email
   - Tài khoản mạng xã hội (Facebook, Zalo)
-  - Địa chỉ/Chi nhánh làm việc
+  - Địa chỉ/Dịch vụ
   - Ảnh đại diện
   - Mô tả/Ghi chú
 
@@ -68,7 +68,7 @@ CREATE TABLE gdv (
   facebook VARCHAR(255),
   zalo VARCHAR(20),
   dia_chi TEXT,
-  chi_nhanh VARCHAR(255),
+  dich_vu VARCHAR(255),
   avatar_url TEXT,
   mo_ta TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -77,7 +77,7 @@ CREATE TABLE gdv (
 
 -- Tạo index để tìm kiếm nhanh hơn
 CREATE INDEX idx_gdv_ho_ten ON gdv(ho_ten);
-CREATE INDEX idx_gdv_chi_nhanh ON gdv(chi_nhanh);
+CREATE INDEX idx_gdv_dich_vu ON gdv(dich_vu);
 
 -- Bật Row Level Security
 ALTER TABLE gdv ENABLE ROW LEVEL SECURITY;
@@ -104,9 +104,9 @@ CREATE POLICY "Allow authenticated delete" ON gdv
   USING (auth.role() = 'authenticated');
 
 -- Thêm dữ liệu mẫu (tùy chọn)
-INSERT INTO gdv (ho_ten, sdt, email, chi_nhanh, mo_ta) VALUES
-  ('Nguyễn Văn A', '0901234567', 'nguyenvana@example.com', 'Chi nhánh Hà Nội', 'Giao dịch viên chuyên nghiệp với 5 năm kinh nghiệm'),
-  ('Trần Thị B', '0912345678', 'tranthib@example.com', 'Chi nhánh TP.HCM', 'Tư vấn nhiệt tình, hỗ trợ khách hàng 24/7');
+INSERT INTO gdv (ho_ten, sdt, email, dich_vu, mo_ta) VALUES
+  ('Nguyễn Văn A', '0901234567', 'nguyenvana@example.com', 'mxh', 'Giao dịch viên chuyên nghiệp với 5 năm kinh nghiệm'),
+  ('Trần Thị B', '0912345678', 'tranthib@example.com', 'game', 'Tư vấn nhiệt tình, hỗ trợ khách hàng 24/7');
 ```
 
 5. Click "Run" để thực thi SQL

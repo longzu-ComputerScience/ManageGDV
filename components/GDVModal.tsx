@@ -77,8 +77,22 @@ export default function GDVModal({ gdv, onClose }: GDVModalProps) {
               )}
             </div>
             <h2 className="mt-5 text-2xl font-bold text-white text-center drop-shadow-lg">{gdv.ho_ten}</h2>
-            {gdv.chi_nhanh && (
-              <p className="mt-2 text-violet-100 text-sm bg-white/20 px-4 py-1 rounded-full">{gdv.chi_nhanh}</p>
+            {(gdv.dich_vu || typeof gdv.so_tien_coc === 'number') && (
+              <div className="mt-3 flex flex-wrap items-center gap-3 justify-center">
+                {gdv.dich_vu && (
+                  <span className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-sm font-semibold shadow-md">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    {gdv.dich_vu}
+                  </span>
+                )}
+
+                {typeof gdv.so_tien_coc === 'number' && (
+                  <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white text-base font-extrabold shadow-2xl animate-pulse">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 1C7.03 1 3 5.03 3 10C3 14.97 7.03 19 12 19C16.97 19 21 14.97 21 10C21 5.03 16.97 1 12 1ZM12 17C8.13 17 5 13.87 5 10C5 6.13 8.13 3 12 3C15.87 3 19 6.13 19 10C19 13.87 15.87 17 12 17Z" fill="white"/><path d="M11 7H13V11H15V13H13V15H11V13H9V11H11V7Z" fill="white"/></svg>
+                    {new Intl.NumberFormat('vi-VN').format(gdv.so_tien_coc)} ₫
+                  </span>
+                )}
+              </div>
             )}
           </div>
         </div>

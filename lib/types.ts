@@ -6,7 +6,7 @@ export interface GDV {
   facebook?: string | null
   zalo?: string | null
   dia_chi?: string | null
-  chi_nhanh?: string | null
+  dich_vu?: string | null
   avatar_url?: string | null
   mo_ta?: string | null
   so_tai_khoan?: string | null
@@ -23,7 +23,8 @@ export interface GDVFormData {
   facebook?: string | null
   zalo?: string | null
   dia_chi?: string | null
-  chi_nhanh?: string | null
+  dich_vu?: string | null
+  so_tien_coc?: number | null
   avatar_url?: string | null
   mo_ta?: string | null
   so_tai_khoan?: string | null

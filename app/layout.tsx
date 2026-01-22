@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingButtons from '@/components/FloatingButtons'
+import ToastContainer from '@/components/Toast'
 
 export const metadata: Metadata = {
   title: 'GDV Manager - Quản lý Giao dịch viên',
@@ -42,6 +43,7 @@ export default function RootLayout({
           <Footer />
         </div>
         <FloatingButtons />
+        <ToastContainer />
       </body>
     </html>
   )

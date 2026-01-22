@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { showToast } from '@/lib/toast'
 import { useRouter } from 'next/navigation'
 import AdminSidebar from '@/components/AdminSidebar'
 import GDVForm from '@/components/GDVForm'
@@ -32,7 +33,7 @@ export default function AddGDVPage() {
       throw new Error(error.message)
     }
 
-    alert('Thêm GDV thành công!')
+    showToast('Thêm GDV thành công!', 'success')
     router.push('/admin')
   }
 
