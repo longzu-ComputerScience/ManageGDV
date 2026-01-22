@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { useState } from 'react'
 import Link from 'next/link'
 import { GDV } from '@/lib/types'
 
@@ -7,16 +8,18 @@ interface GDVDetailProps {
 }
 
 export default function GDVDetail({ gdv }: GDVDetailProps) {
+  const [imgError, setImgError] = useState(false)
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="md:flex">
         <div className="md:w-1/3 bg-gradient-to-br from-primary-100 to-primary-200">
-          {gdv.avatar_url ? (
+          {gdv.avatar_url && !imgError ? (
             <div className="relative h-96">
               <Image
                 src={gdv.avatar_url}
                 alt={gdv.ho_ten}
                 fill
+                onError={() => setImgError(true)}
                 className="object-cover"
               />
             </div>

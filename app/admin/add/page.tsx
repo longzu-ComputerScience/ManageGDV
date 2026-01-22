@@ -34,7 +34,9 @@ export default function AddGDVPage() {
     }
 
     showToast('Thêm GDV thành công!', 'success')
-    router.push('/admin')
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('gdv-navigation-start'))
+    await router.push('/admin')
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('gdv-navigation-end'))
   }
 
   if (loading) {

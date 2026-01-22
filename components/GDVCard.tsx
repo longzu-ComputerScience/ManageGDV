@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState } from 'react'
 import { GDV } from '@/lib/types'
 
 interface GDVCardProps {
@@ -7,15 +8,17 @@ interface GDVCardProps {
 }
 
 export default function GDVCard({ gdv }: GDVCardProps) {
+  const [imgError, setImgError] = useState(false)
   return (
     <Link href={`/gdv/${gdv.id}`}>
       <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer">
         <div className="relative h-48 bg-gradient-to-br from-primary-100 to-primary-200">
-          {gdv.avatar_url ? (
+          {gdv.avatar_url && !imgError ? (
             <Image
               src={gdv.avatar_url}
               alt={gdv.ho_ten}
               fill
+              onError={() => setImgError(true)}
               className="object-cover"
             />
           ) : (

@@ -35,7 +35,9 @@ export default function EditGDVPage({ params }: { params: { id: string } }) {
 
     if (error) {
       showToast('Lỗi: ' + error.message, 'error')
-      router.push('/admin')
+        if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('gdv-navigation-start'))
+        await router.push('/admin')
+        if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('gdv-navigation-end'))
       return
     }
 
@@ -57,7 +59,9 @@ export default function EditGDVPage({ params }: { params: { id: string } }) {
     }
 
     showToast('Cập nhật thành công!', 'success')
-    router.push('/admin')
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('gdv-navigation-start'))
+    await router.push('/admin')
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('gdv-navigation-end'))
   }
 
   if (loading) {

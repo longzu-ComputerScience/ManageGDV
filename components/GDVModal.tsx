@@ -11,6 +11,7 @@ interface GDVModalProps {
 
 export default function GDVModal({ gdv, onClose }: GDVModalProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null)
+  const [avatarError, setAvatarError] = useState(false)
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -62,12 +63,13 @@ export default function GDVModal({ gdv, onClose }: GDVModalProps) {
           
           <div className="flex flex-col items-center">
             <div className="w-28 h-28 rounded-2xl overflow-hidden border-4 border-white/30 shadow-2xl shadow-violet-500/50 ring-4 ring-white/20">
-              {gdv.avatar_url ? (
+              {gdv.avatar_url && !avatarError ? (
                 <Image
                   src={gdv.avatar_url}
                   alt={gdv.ho_ten}
                   width={112}
                   height={112}
+                  onError={() => setAvatarError(true)}
                   className="object-cover w-full h-full"
                 />
               ) : (

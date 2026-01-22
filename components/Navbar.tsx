@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { useState, useEffect, useRef } from 'react'
+import { showToast } from '@/lib/toast'
+import { navigateWithProgress } from '@/lib/navigation'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -37,8 +39,14 @@ export default function Navbar() {
   }
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    window.location.href = '/'
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+      await navigateWithProgress(router, '/')
+      showToast('Đăng xuất thành công', 'success')
+    } catch (err: any) {
+      showToast(err?.message || 'Lỗi khi đăng xuất', 'error')
+    }
   }
 
   const toggleTheme = () => {
@@ -53,7 +61,7 @@ export default function Navbar() {
   }
 
   // Secret login: Click logo 5 times within 3 seconds
-  const handleLogoClick = (e: React.MouseEvent) => {
+  const handleLogoClick = async (e: React.MouseEvent) => {
     e.preventDefault()
     
     if (clickTimeoutRef.current) {
@@ -65,7 +73,7 @@ export default function Navbar() {
     
     if (newCount >= 5) {
       setLogoClickCount(0)
-      router.push('/admin/login')
+      await navigateWithProgress(router, '/admin/login')
       return
     }
     

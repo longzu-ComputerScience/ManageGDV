@@ -59,11 +59,13 @@ export default function AdminDashboard() {
   const navigateTo = async (path: string, id: string) => {
     try {
       setNavigatingId(id)
+      if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('gdv-navigation-start'))
       await router.push(path)
     } catch (err) {
       // ignore
     } finally {
       setNavigatingId(null)
+      if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('gdv-navigation-end'))
     }
   }
 

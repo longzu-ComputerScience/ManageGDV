@@ -1,6 +1,7 @@
-'use client'
+ 'use client'
 
 import Image from 'next/image'
+import { useState } from 'react'
 import { GDV } from '@/lib/types'
 
 interface GDVAvatarProps {
@@ -23,6 +24,7 @@ const gradients = [
 
 export default function GDVAvatar({ gdv, index, onClick }: GDVAvatarProps) {
   const gradient = gradients[index % gradients.length]
+  const [imageError, setImageError] = useState(false)
 
   return (
     <div 
@@ -38,11 +40,12 @@ export default function GDVAvatar({ gdv, index, onClick }: GDVAvatarProps) {
         <div className={`absolute -inset-1 bg-gradient-to-r ${gradient} rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300`}></div>
         
         <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-white/80 shadow-lg group-hover:shadow-2xl transition-all duration-300 bg-white">
-          {gdv.avatar_url ? (
+          {gdv.avatar_url && !imageError ? (
             <Image
               src={gdv.avatar_url}
               alt={gdv.ho_ten}
               fill
+              onError={() => setImageError(true)}
               className="object-cover group-hover:scale-110 transition-transform duration-500"
             />
           ) : (

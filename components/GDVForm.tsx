@@ -37,6 +37,31 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
       setError('Họ tên là bắt buộc')
       return
     }
+    // Validate avatar URL to avoid admin entering non-image facebook page links
+    if (formData.avatar_url) {
+      const isLikelyImage = (() => {
+        try {
+          const u = new URL(formData.avatar_url as string)
+          const host = u.hostname.toLowerCase()
+          const pathname = u.pathname.toLowerCase()
+          const ext = pathname.split('.').pop() || ''
+          const imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif']
+
+          if (imageExts.includes(ext)) return true
+          if (host.includes('fbcdn.net')) return true
+          // Reject facebook page/photo links that are not direct image URLs
+          if (host.includes('facebook.com') && (pathname.includes('/photo') || pathname.includes('/photos') || pathname.includes('/picture'))) return false
+          return false
+        } catch (err) {
+          return false
+        }
+      })()
+
+      if (!isLikelyImage) {
+        setError('URL ảnh không hợp lệ. Vui lòng sử dụng link trực tiếp tới file ảnh (ví dụ có đuôi .jpg) hoặc link từ scontent.fbcdn.net.')
+        return
+      }
+    }
 
     setLoading(true)
     setError('')

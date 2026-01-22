@@ -5,6 +5,7 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { GDV } from '@/lib/types'
 import GDVAvatar from '@/components/GDVAvatar'
 import GDVModal from '@/components/GDVModal'
+import HeroTypingHeader from '@/components/HeroTypingHeader'
 
 export default function HomePage() {
   const [gdvList, setGdvList] = useState<GDV[]>([])
@@ -91,12 +92,58 @@ export default function HomePage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-600 bg-clip-text text-transparent mb-3">
-          Danh sách Giao dịch viên
-        </h1>
-        <p className="text-slate-500 text-lg">
-          Tìm và kết nối với <span className="font-semibold text-violet-600">{gdvList.length}</span> giao dịch viên của chúng tôi
-        </p>
+        <HeroTypingHeader
+          headers={[
+    {
+      title: 'Danh sách Giao dịch viên',
+      subtitle: 'Tìm và kết nối với 5 giao dịch viên của chúng tôi',
+    },
+    {
+      title: 'Admin Kiều Thị Thanh Huyền',
+      subtitle: 'Huyền có Bảo Hiểm 100M tại Checkscam.vn',
+      renderTitle: text => {
+        const name = 'Kiều Thị Thanh Huyền'
+        const idx = text.indexOf(name)
+
+        if (idx === -1) return <>{text}</>
+
+        return (
+          <>
+            {text.slice(0, idx)}
+            <a
+              href="https://www.facebook.com/sdt.0854182198"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold underline"
+            >
+              {name.slice(0, text.length - idx)}
+            </a>
+          </>
+        )
+      },
+      renderSubtitle: text => {
+        const key = 'Checkscam.vn'
+        const idx = text.indexOf(key)
+
+        if (idx === -1) return <>{text}</>
+
+        return (
+          <>
+            {text.slice(0, idx)}
+            <a
+              href="https://admin.checkscam.vn/huyen-da/?fbclid=IwY2xjawPewuVleHRuA2FlbQIxMABicmlkETFUTmdxTWg0YUVPbGt1VWE2c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgxrWl0QRiQ_yg7ZRxtH3Dc2QQOJXP5HH0POApqPpHTcymWbdPFxluFUeXm2_aem_DgvRLsLG936lSMjE00CjLQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold underline"
+            >
+              {key.slice(0, text.length - idx)}
+            </a>
+          </>
+        )
+      },
+    },
+  ]}
+        />
       </div>
 
       {/* Search */}

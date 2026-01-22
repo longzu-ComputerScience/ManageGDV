@@ -5,6 +5,7 @@ import { useState } from 'react'
 export default function FloatingButtons() {
   const [showNoiQuy, setShowNoiQuy] = useState(false)
   const [showLienHe, setShowLienHe] = useState(false)
+  const [showYeuCauGDV, setShowYeuCauGDV] = useState(false)
 
   return (
     <>
@@ -30,6 +31,17 @@ export default function FloatingButtons() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
           <span className="font-semibold whitespace-nowrap">Liên hệ Admin</span>
+        </button>
+
+        {/* Yêu cầu làm GDV */}
+        <button
+          onClick={() => setShowYeuCauGDV(true)}
+          className="group flex items-center gap-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white px-5 py-3 rounded-2xl shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+        >
+          <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          <span className="font-semibold whitespace-nowrap">Yêu cầu làm GDV</span>
         </button>
       </div>
 
@@ -185,6 +197,90 @@ export default function FloatingButtons() {
                   <svg className="w-5 h-5 text-slate-400 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Yêu cầu làm GDV */}
+      {showYeuCauGDV && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4"
+          onClick={() => setShowYeuCauGDV(false)}
+        >
+          <div 
+            className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto animate-modal-enter border border-white/20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-gradient-to-r from-violet-500 to-purple-600 p-6 rounded-t-3xl flex items-center justify-between">
+              <h2 className="text-xl font-bold text-white flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </div>
+                Yêu cầu làm GDV
+              </h2>
+              <button 
+                onClick={() => setShowYeuCauGDV(false)}
+                className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition-all hover:rotate-90"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-6 space-y-4 text-slate-700">
+              <p className="text-slate-600 text-center text-sm mb-4">
+                Để trở thành GDV chính thức, bạn cần đáp ứng các yêu cầu sau:
+              </p>
+              
+              <div className="space-y-3">
+                <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
+                  <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">1</span>
+                  <p className="pt-1">Tuổi từ 18 trở lên, có đầy đủ năng lực hành vi dân sự.</p>
+                </div>
+                <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
+                  <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">2</span>
+                  <p className="pt-1">Có kinh nghiệm trong lĩnh vực dịch vụ mà bạn đăng ký.</p>
+                </div>
+                <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
+                  <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">3</span>
+                  <p className="pt-1">Cam kết tuân thủ nội quy và quy định của hệ thống.</p>
+                </div>
+                <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
+                  <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">4</span>
+                  <p className="pt-1">Cung cấp đầy đủ thông tin cá nhân và giấy tờ cần thiết.</p>
+                </div>
+                <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
+                  <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">5</span>
+                  <p className="pt-1">Tham gia đào tạo và kiểm tra năng lực nếu được yêu cầu.</p>
+                </div>
+              </div>
+              
+              <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl">
+                <p className="text-amber-700 font-medium text-sm flex items-center gap-2">
+                  <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Lưu ý: Việc đăng ký sẽ được xem xét và phê duyệt bởi Admin. Thời gian xử lý có thể mất 1-3 ngày làm việc.
+                </p>
+              </div>
+              
+              <div className="mt-6 flex justify-center">
+                <a
+                  href="#" // Placeholder link - user will provide the actual link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setShowYeuCauGDV(false)}
+                  className="inline-flex items-center gap-3 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Đăng ký ngay
                 </a>
               </div>
             </div>
