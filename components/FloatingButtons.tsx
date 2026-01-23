@@ -3,7 +3,6 @@
 import { useState } from 'react'
 
 export default function FloatingButtons() {
-  const [showNoiQuy, setShowNoiQuy] = useState(false)
   const [showLienHe, setShowLienHe] = useState(false)
   const [showYeuCauGDV, setShowYeuCauGDV] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -14,17 +13,6 @@ export default function FloatingButtons() {
       <div className="fixed bottom-16 right-4 md:bottom-20 md:right-10 z-40 flex flex-col items-end gap-3">
         {/* Expanded menu items */}
         <div className={`flex flex-col items-end gap-3 transition-all duration-300 ${isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-          {/* Nội quy giao dịch */}
-          <button
-            onClick={() => { setShowNoiQuy(true); setIsExpanded(false); }}
-            className="group flex items-center gap-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-5 py-3 rounded-2xl shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
-          >
-            <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span className="font-semibold whitespace-nowrap">Nội quy giao dịch</span>
-          </button>
-
           {/* Liên hệ Admin */}
           <button
             onClick={() => { setShowLienHe(true); setIsExpanded(false); }}
@@ -74,68 +62,6 @@ export default function FloatingButtons() {
           className="fixed inset-0 z-30"
           onClick={() => setIsExpanded(false)}
         />
-      )}
-
-      {/* Modal Nội quy giao dịch */}
-      {showNoiQuy && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4"
-          onClick={() => setShowNoiQuy(false)}
-        >
-          <div
-            className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto animate-modal-enter border border-white/20"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="bg-gradient-to-r from-amber-400 to-orange-500 p-6 rounded-t-3xl flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                Nội quy giao dịch
-              </h2>
-              <button
-                onClick={() => setShowNoiQuy(false)}
-                className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition-all hover:rotate-90"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-6 space-y-4 text-slate-700">
-              <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
-                <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">1</span>
-                <p className="pt-1">Kiểm tra kỹ thông tin GDV trước khi giao dịch.</p>
-              </div>
-              <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
-                <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">2</span>
-                <p className="pt-1">Chỉ giao dịch với các GDV có trong danh sách này.</p>
-              </div>
-              <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
-                <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">3</span>
-                <p className="pt-1">Không chia sẻ thông tin cá nhân, mật khẩu cho bất kỳ ai.</p>
-              </div>
-              <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
-                <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">4</span>
-                <p className="pt-1">Lưu giữ biên lai, hóa đơn giao dịch để đối chiếu khi cần.</p>
-              </div>
-              <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
-                <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">5</span>
-                <p className="pt-1">Liên hệ Admin ngay nếu phát hiện bất thường.</p>
-              </div>
-              <div className="mt-6 p-4 bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-2xl">
-                <p className="text-red-600 font-medium text-sm flex items-center gap-2">
-                  <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  Cảnh báo: Chúng tôi không chịu trách nhiệm với các giao dịch ngoài danh sách GDV chính thức.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       )}
 
       {/* Modal Liên hệ Admin */}

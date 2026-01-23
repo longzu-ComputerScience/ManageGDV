@@ -109,6 +109,24 @@ export default function Navbar() {
               >
                 Danh sách GDV
               </Link>
+              <Link
+                href="/nap-game"
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname === '/nap-game'
+                  ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
+                  }`}
+              >
+                Nạp Game
+              </Link>
+              <Link
+                href="/noi-quy-giao-dich"
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname === '/noi-quy-giao-dich'
+                  ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
+                  }`}
+              >
+                Nội quy giao dịch
+              </Link>
               {isAdmin && (
                 <Link
                   href="/admin"

@@ -1,13 +1,48 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 export default function TopProgress() {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [active, setActive] = useState(false)
+  const startTimeRef = useRef<number | null>(null)
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const lastKeyRef = useRef<string>('')
+
+  const start = useCallback(() => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current)
+      hideTimeoutRef.current = null
+    }
+    if (!active) {
+      startTimeRef.current = Date.now()
+      setActive(true)
+    }
+  }, [active])
+
+  const stop = useCallback(() => {
+    if (!active) return
+
+    const elapsed = startTimeRef.current ? Date.now() - startTimeRef.current : 0
+    const minVisibleMs = 250
+    const remaining = Math.max(0, minVisibleMs - elapsed)
+
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current)
+    }
+
+    hideTimeoutRef.current = setTimeout(() => {
+      setActive(false)
+      startTimeRef.current = null
+      hideTimeoutRef.current = null
+    }, remaining)
+  }, [active])
 
   useEffect(() => {
-    const onStart = () => setActive(true)
-    const onEnd = () => setActive(false)
+    const onStart = () => start()
+    const onEnd = () => stop()
 
     window.addEventListener('gdv-navigation-start', onStart)
     window.addEventListener('gdv-navigation-end', onEnd)
@@ -16,7 +51,58 @@ export default function TopProgress() {
       window.removeEventListener('gdv-navigation-start', onStart)
       window.removeEventListener('gdv-navigation-end', onEnd)
     }
-  }, [])
+  }, [start, stop])
+
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0) return
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+      const target = event.target as HTMLElement | null
+      const anchor = target?.closest('a') as HTMLAnchorElement | null
+      if (!anchor) return
+      if (anchor.target && anchor.target !== '_self') return
+      if (anchor.hasAttribute('download')) return
+
+      const href = anchor.getAttribute('href')
+      if (!href || href.startsWith('#')) return
+      if (href.startsWith('mailto:') || href.startsWith('tel:')) return
+
+      let url: URL
+      try {
+        url = new URL(href, window.location.href)
+      } catch {
+        return
+      }
+
+      if (url.origin !== window.location.origin) return
+
+      const currentUrl = new URL(window.location.href)
+      if (url.pathname === currentUrl.pathname && url.search === currentUrl.search) return
+
+      start()
+    }
+
+    const handlePopState = () => {
+      start()
+    }
+
+    document.addEventListener('click', handleClick, true)
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      document.removeEventListener('click', handleClick, true)
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [start])
+
+  useEffect(() => {
+    const key = `${pathname}?${searchParams?.toString() ?? ''}`
+    if (lastKeyRef.current && lastKeyRef.current !== key) {
+      stop()
+    }
+    lastKeyRef.current = key
+  }, [pathname, searchParams, stop])
 
   return (
     <div aria-hidden>
