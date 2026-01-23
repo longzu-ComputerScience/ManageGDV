@@ -21,6 +21,10 @@ export default function Navbar() {
   const accumDeltaRef = useRef(0)
   const lastDirectionRef = useRef<'up' | 'down' | 'none'>('none')
 
+  const setHidden = (value: boolean) => {
+    setHideTopBar(prev => (prev === value ? prev : value))
+  }
+
   useEffect(() => {
     checkUser()
     const { data: authListener } = supabase.auth.onAuthStateChange(() => {
@@ -45,16 +49,19 @@ export default function Navbar() {
       tickingRef.current = true
 
       requestAnimationFrame(() => {
-        const currentScrollY = window.scrollY
+        const currentScrollY = Math.max(0, window.scrollY)
         const lastScrollY = lastScrollYRef.current
         const delta = currentScrollY - lastScrollY
+        const absDelta = Math.abs(delta)
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight
         const nearTop = currentScrollY < 20
         const nearBottom = maxScroll - currentScrollY < 20
 
         if (nearTop) {
-          setHideTopBar(false)
-        } else if (!nearBottom) {
+          setHidden(false)
+          accumDeltaRef.current = 0
+          lastDirectionRef.current = 'none'
+        } else if (!nearBottom && absDelta > 3) {
           const direction = delta > 0 ? 'down' : delta < 0 ? 'up' : lastDirectionRef.current
 
           if (direction !== lastDirectionRef.current) {
@@ -65,12 +72,12 @@ export default function Navbar() {
           accumDeltaRef.current += delta
 
           if (direction === 'down' && accumDeltaRef.current > 60 && currentScrollY > 100) {
-            setHideTopBar(true)
+            setHidden(true)
             accumDeltaRef.current = 0
           }
 
           if (direction === 'up' && accumDeltaRef.current < -40) {
-            setHideTopBar(false)
+            setHidden(false)
             accumDeltaRef.current = 0
           }
         }
@@ -138,108 +145,110 @@ export default function Navbar() {
   return (
     <nav className="bg-white/80 backdrop-blur-xl border-b border-slate-200/50 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          className={`flex justify-between h-16 transition-[max-height,opacity,transform] duration-300 overflow-hidden md:overflow-visible md:opacity-100 md:translate-y-0 md:h-16 will-change-transform ${hideTopBar
-            ? 'max-h-0 opacity-0 -translate-y-3 pointer-events-none md:max-h-none'
-            : 'max-h-20 opacity-100 translate-y-0'
-            }`}
-        >
-          <div className="flex items-center">
-            <div className="flex items-center group cursor-pointer" onClick={handleLogoClick}>
-              <div className="w-12 h-12 rounded-xl overflow-hidden mr-3 shadow-lg shadow-violet-500/30 group-hover:shadow-violet-500/50 transition-all duration-300 group-hover:scale-105">
-                <img
-                  src="/logo.png"
-                  alt="CI24 Logo"
-                  className="w-full h-full object-cover"
-                />
+        <div className="relative h-16">
+          <div
+            className={`absolute inset-0 flex justify-between items-center transition-transform duration-300 will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${hideTopBar
+              ? '-translate-y-full opacity-0 pointer-events-none'
+              : 'translate-y-0 opacity-100'
+              }`}
+          >
+            <div className="flex items-center">
+              <div className="flex items-center group cursor-pointer" onClick={handleLogoClick}>
+                <div className="w-12 h-12 rounded-xl overflow-hidden mr-3 shadow-lg shadow-violet-500/30 group-hover:shadow-violet-500/50 transition-all duration-300 group-hover:scale-105">
+                  <img
+                    src="/logo.png"
+                    alt="CI24 Logo"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <span className="text-xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 bg-clip-text text-transparent">
+                  CI24
+                </span>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 bg-clip-text text-transparent">
-                CI24
-              </span>
-            </div>
-            <div className="hidden md:flex ml-10 space-x-1">
-              <Link
-                href="/"
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname === '/'
-                  ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
-                  }`}
-              >
-                Danh sách GDV
-              </Link>
-              <Link
-                href="/nap-game"
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname === '/nap-game'
-                  ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
-                  }`}
-              >
-                Nạp Game
-              </Link>
-              <Link
-                href="/noi-quy-giao-dich"
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname === '/noi-quy-giao-dich'
-                  ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
-                  }`}
-              >
-                Nội quy giao dịch
-              </Link>
-              {isAdmin && (
+              <div className="hidden md:flex ml-10 space-x-1">
                 <Link
-                  href="/admin"
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname?.startsWith('/admin') && pathname !== '/admin/login'
+                  href="/"
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname === '/'
                     ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
                     }`}
                 >
-                  Quản lý Admin
+                  Danh sách GDV
                 </Link>
-              )}
+                <Link
+                  href="/nap-game"
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname === '/nap-game'
+                    ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
+                    }`}
+                >
+                  Nạp Game
+                </Link>
+                <Link
+                  href="/noi-quy-giao-dich"
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname === '/noi-quy-giao-dich'
+                    ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
+                    }`}
+                >
+                  Nội quy giao dịch
+                </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname?.startsWith('/admin') && pathname !== '/admin/login'
+                      ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
+                      }`}
+                  >
+                    Quản lý Admin
+                  </Link>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-all duration-300 hover:shadow-md"
-              title={isDark ? 'Chế độ sáng' : 'Chế độ tối'}
-            >
-              {isDark ? (
-                <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              )}
-            </button>
-
-            {isAdmin && (
+            <div className="flex items-center gap-3">
+              {/* Theme Toggle Button */}
               <button
-                onClick={handleLogout}
-                className="hidden md:inline-flex bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 shadow-md shadow-red-500/30 hover:shadow-red-500/40"
+                onClick={toggleTheme}
+                className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-all duration-300 hover:shadow-md"
+                title={isDark ? 'Chế độ sáng' : 'Chế độ tối'}
               >
-                Đăng xuất
+                {isDark ? (
+                  <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
               </button>
-            )}
 
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-all duration-300 hover:shadow-md"
-              aria-label="Mở menu"
-            >
-              {isMenuOpen ? (
-                <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
+              {isAdmin && (
+                <button
+                  onClick={handleLogout}
+                  className="hidden md:inline-flex bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 shadow-md shadow-red-500/30 hover:shadow-red-500/40"
+                >
+                  Đăng xuất
+                </button>
               )}
-            </button>
+
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-all duration-300 hover:shadow-md"
+                aria-label="Mở menu"
+              >
+                {isMenuOpen ? (
+                  <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
