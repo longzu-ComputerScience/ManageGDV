@@ -1,11 +1,9 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingButtons from '@/components/FloatingButtons'
 import ToastContainer from '@/components/Toast'
-import TopProgress from '@/components/TopProgress'
 
 export const metadata: Metadata = {
   title: 'GDV Manager - Quản lý Giao dịch viên',
@@ -39,9 +37,6 @@ export default function RootLayout({
 
         <div className="min-h-screen flex flex-col relative">
           <Navbar />
-          <Suspense fallback={null}>
-            <TopProgress />
-          </Suspense>
           <main className="flex-grow">
             {children}
           </main>
