@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS gdv (
   so_tai_khoan VARCHAR(50),
   ngan_hang VARCHAR(255),
   thu_tu INTEGER DEFAULT 0,
+  is_admin BOOLEAN DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -54,10 +55,11 @@ CREATE POLICY "Allow authenticated delete" ON gdv
   USING (auth.role() = 'authenticated');
 
 -- Thêm dữ liệu mẫu (tùy chọn - comment lại nếu không muốn)
-INSERT INTO gdv (ho_ten, sdt, email, dich_vu, so_tien_coc, mo_ta, avatar_url) VALUES
-  ('Nguyễn Văn A', '0901234567', 'nguyenvana@example.com', 'mxh', 1000000, 'Giao dịch viên chuyên nghiệp với 5 năm kinh nghiệm trong lĩnh vực tư vấn tài chính', 'https://ui-avatars.com/api/?name=Nguyen+Van+A&background=0ea5e9&color=fff&size=200'),
-  ('Trần Thị B', '0912345678', 'tranthib@example.com', 'game', 500000, 'Tư vấn nhiệt tình, hỗ trợ khách hàng 24/7. Chuyên môn cao về bất động sản', 'https://ui-avatars.com/api/?name=Tran+Thi+B&background=0ea5e9&color=fff&size=200'),
-  ('Lê Minh C', '0923456789', 'leminhc@example.com', 'mxh', 0, 'Có kinh nghiệm hơn 10 năm trong ngành. Luôn đặt lợi ích khách hàng lên hàng đầu', 'https://ui-avatars.com/api/?name=Le+Minh+C&background=0ea5e9&color=fff&size=200')
+INSERT INTO gdv (ho_ten, sdt, email, dich_vu, so_tien_coc, mo_ta, avatar_url, is_admin) VALUES
+  ('Admin', '0900000000', 'admin@example.com', 'admin', 0, 'Admin chính thức', 'https://ui-avatars.com/api/?name=Admin&background=f59e0b&color=fff&size=200', true),
+  ('Nguyễn Văn A', '0901234567', 'nguyenvana@example.com', 'mxh', 1000000, 'Giao dịch viên chuyên nghiệp với 5 năm kinh nghiệm trong lĩnh vực tư vấn tài chính', 'https://ui-avatars.com/api/?name=Nguyen+Van+A&background=0ea5e9&color=fff&size=200', false),
+  ('Trần Thị B', '0912345678', 'tranthib@example.com', 'game', 500000, 'Tư vấn nhiệt tình, hỗ trợ khách hàng 24/7. Chuyên môn cao về bất động sản', 'https://ui-avatars.com/api/?name=Tran+Thi+B&background=0ea5e9&color=fff&size=200', false),
+  ('Lê Minh C', '0923456789', 'leminhc@example.com', 'mxh', 0, 'Có kinh nghiệm hơn 10 năm trong ngành. Luôn đặt lợi ích khách hàng lên hàng đầu', 'https://ui-avatars.com/api/?name=Le+Minh+C&background=0ea5e9&color=fff&size=200', false)
 ON CONFLICT DO NOTHING;
 
 -- Tạo function để tự động update updated_at

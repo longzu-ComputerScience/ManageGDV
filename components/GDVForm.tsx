@@ -25,6 +25,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
       so_tai_khoan: '',
       ngan_hang: '',
       thu_tu: 0,
+      is_admin: false,
     }
   )
   const [loading, setLoading] = useState(false)
@@ -109,20 +110,31 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
         </div>
 
         <div>
-          <label htmlFor="thu_tu" className="block text-sm font-medium text-gray-700 mb-2">
-            Số thứ tự hiển thị
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Vị trí hiển thị
           </label>
-          <input
-            type="number"
-            id="thu_tu"
-            name="thu_tu"
-            value={formData.thu_tu || 0}
-            onChange={(e) => setFormData({ ...formData, thu_tu: parseInt(e.target.value) || 0 })}
-            min={0}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            placeholder="0"
-          />
-          <p className="text-xs text-gray-500 mt-1">Số nhỏ hiển thị trước</p>
+          {formData.is_admin ? (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-md border border-amber-200 bg-amber-50 text-amber-700 text-sm font-medium">
+              <svg className="w-4 h-4 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+              </svg>
+              Admin - luôn hiển thị đầu danh sách
+            </div>
+          ) : (
+            <>
+              <input
+                type="number"
+                id="thu_tu"
+                name="thu_tu"
+                value={formData.thu_tu || 0}
+                onChange={(e) => setFormData({ ...formData, thu_tu: parseInt(e.target.value) || 0 })}
+                min={0}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                placeholder="0"
+              />
+              <p className="text-xs text-gray-500 mt-1">Số nhỏ hiển thị trước</p>
+            </>
+          )}
         </div>
       </div>
 

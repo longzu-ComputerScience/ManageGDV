@@ -31,6 +31,7 @@ export default function AdminDashboard() {
     const { data } = await supabase
       .from('gdv')
       .select('*')
+      .order('is_admin', { ascending: false })
       .order('thu_tu', { ascending: true })
     
     if (data) setGdvList(data)
@@ -125,9 +126,17 @@ export default function AdminDashboard() {
                   {gdvList.map((gdv) => (
                     <tr key={gdv.id}>
                       <td className="px-4 py-4 whitespace-nowrap text-center">
-                        <span className="inline-flex items-center justify-center w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold">
-                          {gdv.thu_tu || 0}
-                        </span>
+                        {gdv.is_admin ? (
+                          <span className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-amber-700 rounded-full text-sm font-semibold shadow-md shadow-amber-500/30">
+                            <svg className="w-4 h-4 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                            </svg>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center justify-center w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold">
+                            {gdv.thu_tu || 0}
+                          </span>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
@@ -175,12 +184,18 @@ export default function AdminDashboard() {
                             'Sửa'
                           )}
                         </button>
-                        <button
-                          onClick={() => handleDelete(gdv.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Xóa
-                        </button>
+                        {gdv.is_admin ? (
+                          <span className="text-gray-400 cursor-not-allowed" title="Không thể xóa admin">
+                            Xóa
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => handleDelete(gdv.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Xóa
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}

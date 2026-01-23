@@ -13,6 +13,7 @@ export interface GDV {
   so_tai_khoan?: string | null
   ngan_hang?: string | null
   thu_tu?: number | null
+  is_admin?: boolean | null
   created_at?: string
   updated_at?: string
 }
@@ -32,4 +33,5 @@ export interface GDVFormData {
   so_tai_khoan?: string | null
   ngan_hang?: string | null
   thu_tu?: number | null
+  is_admin?: boolean | null
 }

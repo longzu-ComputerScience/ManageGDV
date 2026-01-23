@@ -8,12 +8,14 @@ import GDVModal from '@/components/GDVModal'
 import HeroTypingHeader from '@/components/HeroTypingHeader'
 
 export default function HomePage() {
+  const [adminGdv, setAdminGdv] = useState<GDV | null>(null)
   const [gdvList, setGdvList] = useState<GDV[]>([])
   const [filteredGdvList, setFilteredGdvList] = useState<GDV[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [selectedGDV, setSelectedGDV] = useState<GDV | null>(null)
+  const totalGdvCount = (adminGdv ? 1 : 0) + gdvList.length
 
   useEffect(() => {
     fetchGDVs()
@@ -43,12 +45,17 @@ export default function HomePage() {
       const { data, error } = await supabase
         .from('gdv')
         .select('*')
+        .order('is_admin', { ascending: false })
         .order('thu_tu', { ascending: true })
 
       if (error) throw error
 
-      setGdvList(data || [])
-      setFilteredGdvList(data || [])
+      const allData = data || []
+      const adminItem = allData.find(item => item.is_admin) || null
+      const rest = allData.filter(item => !item.is_admin)
+      setAdminGdv(adminItem)
+      setGdvList(rest)
+      setFilteredGdvList(rest)
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -96,11 +103,11 @@ export default function HomePage() {
           headers={[
             {
               title: 'Danh sách Giao dịch viên',
-              subtitle: `Tìm và kết nối với ${gdvList.length} giao dịch viên của chúng tôi`,
+              subtitle: `Tìm và kết nối với ${totalGdvCount} giao dịch viên của chúng tôi`,
             },
             {
               title: 'Admin Kiều Thị Thanh Huyền',
-              subtitle: 'Huyền có Bảo Hiểm 100M tại Checkscam.vn',
+              subtitle: 'Huyền nhận GDTG, Gạch thẻ, Nạp Game, ...',
               renderTitle: text => {
                 const name = 'Kiều Thị Thanh Huyền'
                 const idx = text.indexOf(name)
@@ -121,30 +128,26 @@ export default function HomePage() {
                   </>
                 )
               },
-              renderSubtitle: text => {
-                const key = 'Checkscam.vn'
-                const idx = text.indexOf(key)
-
-                if (idx === -1) return <>{text}</>
-
-                return (
-                  <>
-                    {text.slice(0, idx)}
-                    <a
-                      href="https://admin.checkscam.vn/huyen-da/?fbclid=IwY2xjawPewuVleHRuA2FlbQIxMABicmlkETFUTmdxTWg0YUVPbGt1VWE2c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgxrWl0QRiQ_yg7ZRxtH3Dc2QQOJXP5HH0POApqPpHTcymWbdPFxluFUeXm2_aem_DgvRLsLG936lSMjE00CjLQ"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-bold underline"
-                    >
-                      {key.slice(0, text.length - idx)}
-                    </a>
-                  </>
-                )
-              },
             },
           ]}
         />
       </div>
+
+      {adminGdv && (
+        <div className="mb-10 flex flex-col items-center">
+          <div className="mb-3 flex items-center gap-2 text-amber-600 text-sm font-semibold">
+            <svg className="w-4 h-4 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+            </svg>
+            Admin chính thức
+          </div>
+          <GDVAvatar
+            gdv={adminGdv}
+            index={1}
+            onClick={() => setSelectedGDV(adminGdv)}
+          />
+        </div>
+      )}
 
       {/* Search */}
       <div className="mb-10">

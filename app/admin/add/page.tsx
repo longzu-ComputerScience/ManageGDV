@@ -27,7 +27,7 @@ export default function AddGDVPage() {
   const handleSubmit = async (formData: GDVFormData) => {
     const { error } = await supabase
       .from('gdv')
-      .insert([formData])
+      .insert([{ ...formData, is_admin: false }])
 
     if (error) {
       throw new Error(error.message)

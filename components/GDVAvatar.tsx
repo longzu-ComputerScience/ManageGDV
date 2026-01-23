@@ -25,6 +25,7 @@ const gradients = [
 export default function GDVAvatar({ gdv, index, onClick }: GDVAvatarProps) {
   const gradient = gradients[index % gradients.length]
   const [imageError, setImageError] = useState(false)
+  const isAdmin = !!gdv.is_admin
 
   return (
     <div
@@ -56,8 +57,16 @@ export default function GDVAvatar({ gdv, index, onClick }: GDVAvatarProps) {
         </div>
 
         {/* Số thứ tự - compact professional badge */}
-        <div className="absolute -top-2 -left-2 w-6 h-6 flex items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-indigo-600 text-white text-xs font-semibold shadow-lg group-hover:scale-110 transition-transform duration-200">
-          {index}
+        <div className={`absolute -top-2 -left-2 w-6 h-6 flex items-center justify-center rounded-full text-white text-xs font-semibold shadow-lg group-hover:scale-110 transition-transform duration-200 ${
+          isAdmin ? 'bg-gradient-to-br from-amber-400 to-yellow-500 shadow-amber-400/60' : 'bg-gradient-to-br from-teal-500 to-indigo-600'
+        }`}>
+          {isAdmin ? (
+            <svg className="w-4 h-4 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+            </svg>
+          ) : (
+            index
+          )}
         </div>
       </div>
 
