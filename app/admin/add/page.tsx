@@ -27,7 +27,7 @@ export default function AddGDVPage() {
   const handleSubmit = async (formData: GDVFormData) => {
     const { error } = await supabase
       .from('gdv')
-      .insert([{ ...formData, is_admin: false }])
+      .insert([formData])
 
     if (error) {
       throw new Error(error.message)
@@ -61,7 +61,7 @@ export default function AddGDVPage() {
             <h1 className="text-2xl font-bold text-gray-900 mb-6">
               Thêm GDV mới
             </h1>
-            <GDVForm onSubmit={handleSubmit} submitLabel="Thêm GDV" />
+            <GDVForm onSubmit={handleSubmit} submitLabel="Thêm GDV" showAdminToggle />
           </div>
         </div>
       </div>

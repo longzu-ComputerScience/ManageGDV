@@ -77,3 +77,36 @@ CREATE TRIGGER update_gdv_updated_at
     BEFORE UPDATE ON gdv
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
+
+-- Storage bucket + policies cho upload avatar
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('gdv-avatars', 'gdv-avatars', true)
+ON CONFLICT (id) DO NOTHING;
+
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read gdv avatars" ON storage.objects;
+DROP POLICY IF EXISTS "Allow authenticated upload gdv avatars" ON storage.objects;
+DROP POLICY IF EXISTS "Allow authenticated update gdv avatars" ON storage.objects;
+DROP POLICY IF EXISTS "Allow authenticated delete gdv avatars" ON storage.objects;
+
+CREATE POLICY "Allow public read gdv avatars"
+ON storage.objects
+FOR SELECT
+USING (bucket_id = 'gdv-avatars');
+
+CREATE POLICY "Allow authenticated upload gdv avatars"
+ON storage.objects
+FOR INSERT
+WITH CHECK (bucket_id = 'gdv-avatars' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated update gdv avatars"
+ON storage.objects
+FOR UPDATE
+USING (bucket_id = 'gdv-avatars' AND auth.role() = 'authenticated')
+WITH CHECK (bucket_id = 'gdv-avatars' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated delete gdv avatars"
+ON storage.objects
+FOR DELETE
+USING (bucket_id = 'gdv-avatars' AND auth.role() = 'authenticated');

@@ -184,18 +184,12 @@ export default function AdminDashboard() {
                             'Sửa'
                           )}
                         </button>
-                        {gdv.is_admin ? (
-                          <span className="text-gray-400 cursor-not-allowed" title="Không thể xóa admin">
-                            Xóa
-                          </span>
-                        ) : (
-                          <button
-                            onClick={() => handleDelete(gdv.id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            Xóa
-                          </button>
-                        )}
+                        <button
+                          onClick={() => handleDelete(gdv.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          Xóa
+                        </button>
                       </td>
                     </tr>
                   ))}

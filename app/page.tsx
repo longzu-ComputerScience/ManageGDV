@@ -8,14 +8,15 @@ import GDVModal from '@/components/GDVModal'
 import HeroTypingHeader from '@/components/HeroTypingHeader'
 
 export default function HomePage() {
-  const [adminGdv, setAdminGdv] = useState<GDV | null>(null)
+  const [adminList, setAdminList] = useState<GDV[]>([])
   const [gdvList, setGdvList] = useState<GDV[]>([])
+  const [filteredAdminList, setFilteredAdminList] = useState<GDV[]>([])
   const [filteredGdvList, setFilteredGdvList] = useState<GDV[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [selectedGDV, setSelectedGDV] = useState<GDV | null>(null)
-  const totalGdvCount = (adminGdv ? 1 : 0) + gdvList.length
+  const totalGdvCount = adminList.length + gdvList.length
 
   useEffect(() => {
     fetchGDVs()
@@ -23,16 +24,18 @@ export default function HomePage() {
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = gdvList.filter(gdv =>
+      const filterByTerm = (list: GDV[]) => list.filter(gdv =>
         gdv.ho_ten.toLowerCase().includes(searchTerm.toLowerCase()) ||
         gdv.dich_vu?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         gdv.sdt?.includes(searchTerm)
       )
-      setFilteredGdvList(filtered)
+      setFilteredAdminList(filterByTerm(adminList))
+      setFilteredGdvList(filterByTerm(gdvList))
     } else {
+      setFilteredAdminList(adminList)
       setFilteredGdvList(gdvList)
     }
-  }, [searchTerm, gdvList])
+  }, [searchTerm, adminList, gdvList])
 
   const fetchGDVs = async () => {
     try {
@@ -51,10 +54,11 @@ export default function HomePage() {
       if (error) throw error
 
       const allData = data || []
-      const adminItem = allData.find(item => item.is_admin) || null
+      const admins = allData.filter(item => item.is_admin)
       const rest = allData.filter(item => !item.is_admin)
-      setAdminGdv(adminItem)
+      setAdminList(admins)
       setGdvList(rest)
+      setFilteredAdminList(admins)
       setFilteredGdvList(rest)
     } catch (err: any) {
       setError(err.message)
@@ -93,7 +97,7 @@ export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Header */}
-      <div className="text-center mb-10">
+      <div className="text-center mb-2">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-xl shadow-violet-500/30 mb-4">
           <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -133,19 +137,16 @@ export default function HomePage() {
         />
       </div>
 
-      {adminGdv && (
-        <div className="mb-10 flex flex-col items-center">
-          <div className="mb-3 flex items-center gap-2 text-amber-600 text-sm font-semibold">
-            <svg className="w-4 h-4 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-            </svg>
-            Admin chính thức
-          </div>
-          <GDVAvatar
-            gdv={adminGdv}
-            index={1}
-            onClick={() => setSelectedGDV(adminGdv)}
-          />
+      {filteredAdminList.length > 0 && (
+        <div className="mb-2 flex flex-wrap items-center justify-center gap-6">
+          {filteredAdminList.map((gdv, index) => (
+            <GDVAvatar
+              key={gdv.id}
+              gdv={gdv}
+              index={index + 1}
+              onClick={() => setSelectedGDV(gdv)}
+            />
+          ))}
         </div>
       )}
 
@@ -178,7 +179,7 @@ export default function HomePage() {
       </div>
 
       {/* GDV Grid */}
-      {filteredGdvList.length === 0 ? (
+      {filteredAdminList.length + filteredGdvList.length === 0 ? (
         <div className="text-center py-20">
           <div className="w-20 h-20 bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg">
             <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,18 +191,22 @@ export default function HomePage() {
           </p>
         </div>
       ) : (
-        <div className="glass-card rounded-3xl p-8">
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 gap-5 md:gap-7">
-            {filteredGdvList.map((gdv, index) => (
-              <GDVAvatar
-                key={gdv.id}
-                gdv={gdv}
-                index={index + 1}
-                onClick={() => setSelectedGDV(gdv)}
-              />
-            ))}
-          </div>
-        </div>
+        <>
+          {filteredGdvList.length > 0 && (
+            <div className="glass-card rounded-3xl p-8">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 gap-5 md:gap-7">
+                {filteredGdvList.map((gdv, index) => (
+                  <GDVAvatar
+                    key={gdv.id}
+                    gdv={gdv}
+                    index={index + 1}
+                    onClick={() => setSelectedGDV(gdv)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {/* Modal */}

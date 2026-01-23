@@ -100,6 +100,7 @@ export default function EditGDVPage({ params }: { params: { id: string } }) {
               initialData={gdv} 
               onSubmit={handleSubmit} 
               submitLabel="Cập nhật"
+              showAdminToggle
             />
           </div>
         </div>

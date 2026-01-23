@@ -1,15 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { supabase } from '@/lib/supabase'
 import { GDVFormData } from '@/lib/types'
 
 interface GDVFormProps {
   initialData?: GDVFormData
   onSubmit: (data: GDVFormData) => Promise<void>
   submitLabel?: string
+  showAdminToggle?: boolean
 }
 
-export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }: GDVFormProps) {
+export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu', showAdminToggle = false }: GDVFormProps) {
+  const initialAvatarUrlRef = useRef(initialData?.avatar_url || '')
   const [formData, setFormData] = useState<GDVFormData>(
     initialData || {
       ho_ten: '',
@@ -28,8 +31,18 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
       is_admin: false,
     }
   )
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(initialAvatarUrlRef.current || null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const storageBucket = 'gdv-avatars'
+
+  const getStoragePath = (url: string) => {
+    const marker = `/storage/v1/object/public/${storageBucket}/`
+    const index = url.indexOf(marker)
+    if (index === -1) return null
+    return url.slice(index + marker.length)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,37 +51,55 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
       setError('Họ tên là bắt buộc')
       return
     }
-    // Validate avatar URL to avoid admin entering non-image facebook page links
-    if (formData.avatar_url) {
-      const isLikelyImage = (() => {
-        try {
-          const u = new URL(formData.avatar_url as string)
-          const host = u.hostname.toLowerCase()
-          const pathname = u.pathname.toLowerCase()
-          const ext = pathname.split('.').pop() || ''
-          const imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif']
-
-          if (imageExts.includes(ext)) return true
-          if (host.includes('fbcdn.net')) return true
-          // Reject facebook page/photo links that are not direct image URLs
-          if (host.includes('facebook.com') && (pathname.includes('/photo') || pathname.includes('/photos') || pathname.includes('/picture'))) return false
-          return false
-        } catch (err) {
-          return false
-        }
-      })()
-
-      if (!isLikelyImage) {
-        setError('URL ảnh không hợp lệ. Vui lòng sử dụng link trực tiếp tới file ảnh (ví dụ có đuôi .jpg) hoặc link từ scontent.fbcdn.net.')
-        return
-      }
-    }
-
     setLoading(true)
     setError('')
 
     try {
-      await onSubmit(formData)
+      let nextAvatarUrl = (formData.avatar_url || '').trim()
+      const currentAvatarUrl = initialAvatarUrlRef.current || ''
+
+      if (avatarFile) {
+        const safeName = avatarFile.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9._-]/g, '')
+        const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${safeName}`
+        const filePath = `avatars/${fileName}`
+
+        const { error: uploadError } = await supabase
+          .storage
+          .from(storageBucket)
+          .upload(filePath, avatarFile, {
+            upsert: true,
+            contentType: avatarFile.type || undefined,
+          })
+
+        if (uploadError) {
+          const detail = uploadError.message ? ` (${uploadError.message})` : ''
+          throw new Error(`Tải ảnh thất bại. Vui lòng kiểm tra bucket "gdv-avatars" trên Supabase.${detail}`)
+        }
+
+        const { data: publicData } = supabase
+          .storage
+          .from(storageBucket)
+          .getPublicUrl(filePath)
+
+        nextAvatarUrl = publicData?.publicUrl || ''
+
+        if (currentAvatarUrl && currentAvatarUrl !== nextAvatarUrl) {
+          const oldPath = getStoragePath(currentAvatarUrl)
+          if (oldPath) {
+            await supabase.storage.from(storageBucket).remove([oldPath])
+          }
+        }
+      } else if (nextAvatarUrl && currentAvatarUrl && currentAvatarUrl !== nextAvatarUrl) {
+        const oldPath = getStoragePath(currentAvatarUrl)
+        if (oldPath) {
+          await supabase.storage.from(storageBucket).remove([oldPath])
+        }
+      }
+
+      await onSubmit({
+        ...formData,
+        avatar_url: nextAvatarUrl || null,
+      })
     } catch (err: any) {
       setError(err.message || 'Có lỗi xảy ra')
     } finally {
@@ -83,6 +114,57 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
       [name]: name === 'so_tien_coc' ? (value === '' ? null : parseFloat(value)) : (value || null),
     })
   }
+
+  const handleAdminToggle = (checked: boolean) => {
+    setFormData({
+      ...formData,
+      is_admin: checked,
+    })
+  }
+
+  const handleAvatarUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    setAvatarFile(null)
+    setFormData({ ...formData, avatar_url: value || null })
+  }
+
+  const handleAvatarFileChange = (file: File | null) => {
+    setAvatarFile(file)
+    if (file) {
+      setFormData({ ...formData, avatar_url: null })
+    }
+  }
+
+  const handleRemoveAvatar = async () => {
+    if (loading) return
+    const currentAvatarUrl = initialAvatarUrlRef.current || formData.avatar_url || ''
+    const oldPath = currentAvatarUrl ? getStoragePath(currentAvatarUrl) : null
+
+    try {
+      setLoading(true)
+      if (oldPath) {
+        await supabase.storage.from(storageBucket).remove([oldPath])
+      }
+      setAvatarFile(null)
+      setAvatarPreview(null)
+      setFormData({ ...formData, avatar_url: null })
+      initialAvatarUrlRef.current = ''
+    } catch (err: any) {
+      setError(err.message || 'Không thể xóa ảnh hiện tại')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!avatarFile) {
+      setAvatarPreview(formData.avatar_url || initialAvatarUrlRef.current || null)
+      return
+    }
+    const objectUrl = URL.createObjectURL(avatarFile)
+    setAvatarPreview(objectUrl)
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [avatarFile, formData.avatar_url])
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -113,28 +195,32 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Vị trí hiển thị
           </label>
-          {formData.is_admin ? (
-            <div className="flex items-center gap-2 px-3 py-2 rounded-md border border-amber-200 bg-amber-50 text-amber-700 text-sm font-medium">
-              <svg className="w-4 h-4 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-              </svg>
-              Admin - luôn hiển thị đầu danh sách
-            </div>
-          ) : (
-            <>
-              <input
-                type="number"
-                id="thu_tu"
-                name="thu_tu"
-                value={formData.thu_tu || 0}
-                onChange={(e) => setFormData({ ...formData, thu_tu: parseInt(e.target.value) || 0 })}
-                min={0}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="0"
-              />
-              <p className="text-xs text-gray-500 mt-1">Số nhỏ hiển thị trước</p>
-            </>
-          )}
+          <div className="space-y-2">
+            {showAdminToggle && (
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={!!formData.is_admin}
+                  onChange={(e) => handleAdminToggle(e.target.checked)}
+                  className="h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-400"
+                />
+                <span>Đánh dấu là Admin</span>
+              </label>
+            )}
+            <input
+              type="number"
+              id="thu_tu"
+              name="thu_tu"
+              value={formData.thu_tu || 0}
+              onChange={(e) => setFormData({ ...formData, thu_tu: parseInt(e.target.value) || 0 })}
+              min={0}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              placeholder="0"
+            />
+            <p className="text-xs text-gray-500">
+              {formData.is_admin ? 'Số nhỏ hiển thị trước trong nhóm Admin' : 'Số nhỏ hiển thị trước'}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -281,18 +367,71 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu' }:
       </div>
 
       <div>
-        <label htmlFor="avatar_url" className="block text-sm font-medium text-gray-700 mb-2">
-          URL Ảnh đại diện
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Ảnh đại diện
         </label>
-        <input
-          type="url"
-          id="avatar_url"
-          name="avatar_url"
-          value={formData.avatar_url || ''}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          placeholder="https://example.com/avatar.jpg"
-        />
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center">
+              {avatarPreview ? (
+                <img src={avatarPreview} alt="Avatar preview" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-xs text-gray-400">Chưa có ảnh</span>
+              )}
+            </div>
+            <div className="flex-1 grid grid-cols-1 gap-2 md:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <input
+                  type="url"
+                  id="avatar_url"
+                  name="avatar_url"
+                  value={formData.avatar_url || ''}
+                  onChange={handleAvatarUrlChange}
+                  disabled={loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="https://example.com/avatar.jpg"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <input
+                  type="file"
+                  id="avatar_file"
+                  accept="image/*"
+                  onChange={(e) => handleAvatarFileChange(e.target.files?.[0] || null)}
+                  disabled={loading}
+                  className="block text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-primary-600 file:text-white file:cursor-pointer hover:file:bg-primary-700"
+                />
+                {avatarFile && (
+                  <button
+                    type="button"
+                    onClick={() => handleAvatarFileChange(null)}
+                    className="text-xs text-gray-500 hover:text-gray-700 text-left"
+                  >
+                    Bỏ chọn ảnh
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-xs text-gray-500">
+            <span>
+              Nếu có tải ảnh lên sẽ ưu tiên dùng ảnh; nếu không thì dùng link.
+            </span>
+          </div>
+          <p className="text-xs text-gray-500">
+            Ảnh upload sẽ được lưu ở bucket <span className="font-semibold">gdv-avatars</span> trên Supabase.
+          </p>
+          {(avatarPreview || formData.avatar_url || avatarFile) && (
+            <button
+              type="button"
+              onClick={handleRemoveAvatar}
+              disabled={loading}
+              className="text-xs text-red-500 hover:text-red-600 text-left"
+            >
+              Xóa avatar hiện tại
+            </button>
+          )}
+        </div>
       </div>
 
       <div>
