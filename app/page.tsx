@@ -94,55 +94,55 @@ export default function HomePage() {
         </div>
         <HeroTypingHeader
           headers={[
-    {
-      title: 'Danh sách Giao dịch viên',
-      subtitle: 'Tìm và kết nối với 5 giao dịch viên của chúng tôi',
-    },
-    {
-      title: 'Admin Kiều Thị Thanh Huyền',
-      subtitle: 'Huyền có Bảo Hiểm 100M tại Checkscam.vn',
-      renderTitle: text => {
-        const name = 'Kiều Thị Thanh Huyền'
-        const idx = text.indexOf(name)
+            {
+              title: 'Danh sách Giao dịch viên',
+              subtitle: `Tìm và kết nối với ${gdvList.length} giao dịch viên của chúng tôi`,
+            },
+            {
+              title: 'Admin Kiều Thị Thanh Huyền',
+              subtitle: 'Huyền có Bảo Hiểm 100M tại Checkscam.vn',
+              renderTitle: text => {
+                const name = 'Kiều Thị Thanh Huyền'
+                const idx = text.indexOf(name)
 
-        if (idx === -1) return <>{text}</>
+                if (idx === -1) return <>{text}</>
 
-        return (
-          <>
-            {text.slice(0, idx)}
-            <a
-              href="https://www.facebook.com/sdt.0854182198"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-bold underline"
-            >
-              {name.slice(0, text.length - idx)}
-            </a>
-          </>
-        )
-      },
-      renderSubtitle: text => {
-        const key = 'Checkscam.vn'
-        const idx = text.indexOf(key)
+                return (
+                  <>
+                    {text.slice(0, idx)}
+                    <a
+                      href="https://www.facebook.com/sdt.0854182198"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-bold underline"
+                    >
+                      {name.slice(0, text.length - idx)}
+                    </a>
+                  </>
+                )
+              },
+              renderSubtitle: text => {
+                const key = 'Checkscam.vn'
+                const idx = text.indexOf(key)
 
-        if (idx === -1) return <>{text}</>
+                if (idx === -1) return <>{text}</>
 
-        return (
-          <>
-            {text.slice(0, idx)}
-            <a
-              href="https://admin.checkscam.vn/huyen-da/?fbclid=IwY2xjawPewuVleHRuA2FlbQIxMABicmlkETFUTmdxTWg0YUVPbGt1VWE2c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgxrWl0QRiQ_yg7ZRxtH3Dc2QQOJXP5HH0POApqPpHTcymWbdPFxluFUeXm2_aem_DgvRLsLG936lSMjE00CjLQ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-bold underline"
-            >
-              {key.slice(0, text.length - idx)}
-            </a>
-          </>
-        )
-      },
-    },
-  ]}
+                return (
+                  <>
+                    {text.slice(0, idx)}
+                    <a
+                      href="https://admin.checkscam.vn/huyen-da/?fbclid=IwY2xjawPewuVleHRuA2FlbQIxMABicmlkETFUTmdxTWg0YUVPbGt1VWE2c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgxrWl0QRiQ_yg7ZRxtH3Dc2QQOJXP5HH0POApqPpHTcymWbdPFxluFUeXm2_aem_DgvRLsLG936lSMjE00CjLQ"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-bold underline"
+                    >
+                      {key.slice(0, text.length - idx)}
+                    </a>
+                  </>
+                )
+              },
+            },
+          ]}
         />
       </div>
 
@@ -162,7 +162,7 @@ export default function HomePage() {
             className="w-full pl-16 pr-12 py-4 bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-2xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent shadow-lg shadow-slate-200/50 transition-all duration-300"
           />
           {searchTerm && (
-            <button 
+            <button
               onClick={() => setSearchTerm('')}
               className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors"
             >
@@ -190,9 +190,9 @@ export default function HomePage() {
         <div className="glass-card rounded-3xl p-8">
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 gap-5 md:gap-7">
             {filteredGdvList.map((gdv, index) => (
-              <GDVAvatar 
-                key={gdv.id} 
-                gdv={gdv} 
+              <GDVAvatar
+                key={gdv.id}
+                gdv={gdv}
                 index={index + 1}
                 onClick={() => setSelectedGDV(gdv)}
               />
@@ -202,9 +202,9 @@ export default function HomePage() {
       )}
 
       {/* Modal */}
-      <GDVModal 
-        gdv={selectedGDV} 
-        onClose={() => setSelectedGDV(null)} 
+      <GDVModal
+        gdv={selectedGDV}
+        onClose={() => setSelectedGDV(null)}
       />
     </div>
   )

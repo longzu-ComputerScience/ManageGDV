@@ -63,20 +63,20 @@ export default function Navbar() {
   // Secret login: Click logo 5 times within 3 seconds
   const handleLogoClick = async (e: React.MouseEvent) => {
     e.preventDefault()
-    
+
     if (clickTimeoutRef.current) {
       clearTimeout(clickTimeoutRef.current)
     }
-    
+
     const newCount = logoClickCount + 1
     setLogoClickCount(newCount)
-    
+
     if (newCount >= 5) {
       setLogoClickCount(0)
       await navigateWithProgress(router, '/admin/login')
       return
     }
-    
+
     clickTimeoutRef.current = setTimeout(() => {
       setLogoClickCount(0)
     }, 3000)
@@ -88,32 +88,34 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <div className="flex items-center group cursor-pointer" onClick={handleLogoClick}>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center mr-3 shadow-lg shadow-violet-500/30 group-hover:shadow-violet-500/50 transition-shadow duration-300">
-                <span className="text-white font-bold text-lg">G</span>
+              <div className="w-12 h-12 rounded-xl overflow-hidden mr-3 shadow-lg shadow-violet-500/30 group-hover:shadow-violet-500/50 transition-all duration-300 group-hover:scale-105">
+                <img
+                  src="/logo.png"
+                  alt="CI24 Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
-                GDV Manager
+              <span className="text-xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 bg-clip-text text-transparent">
+                CI24
               </span>
             </div>
             <div className="hidden md:flex ml-10 space-x-1">
               <Link
                 href="/"
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                  pathname === '/' 
-                    ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30' 
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
-                }`}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname === '/'
+                  ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
+                  }`}
               >
                 Danh sách GDV
               </Link>
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                    pathname?.startsWith('/admin') && pathname !== '/admin/login'
-                      ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30' 
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${pathname?.startsWith('/admin') && pathname !== '/admin/login'
+                    ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md shadow-violet-500/30'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
+                    }`}
                 >
                   Quản lý Admin
                 </Link>

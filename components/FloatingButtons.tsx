@@ -6,52 +6,83 @@ export default function FloatingButtons() {
   const [showNoiQuy, setShowNoiQuy] = useState(false)
   const [showLienHe, setShowLienHe] = useState(false)
   const [showYeuCauGDV, setShowYeuCauGDV] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <>
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
-        {/* Nội quy giao dịch */}
-        <button
-          onClick={() => setShowNoiQuy(true)}
-          className="group flex items-center gap-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-5 py-3 rounded-2xl shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
-        >
-          <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <span className="font-semibold whitespace-nowrap">Nội quy giao dịch</span>
-        </button>
+      {/* Floating Action Button */}
+      <div className="fixed bottom-16 right-4 md:bottom-20 md:right-10 z-40 flex flex-col items-end gap-3">
+        {/* Expanded menu items */}
+        <div className={`flex flex-col items-end gap-3 transition-all duration-300 ${isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+          {/* Nội quy giao dịch */}
+          <button
+            onClick={() => { setShowNoiQuy(true); setIsExpanded(false); }}
+            className="group flex items-center gap-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-5 py-3 rounded-2xl shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+          >
+            <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span className="font-semibold whitespace-nowrap">Nội quy giao dịch</span>
+          </button>
 
-        {/* Liên hệ Admin */}
-        <button
-          onClick={() => setShowLienHe(true)}
-          className="group flex items-center gap-2 bg-gradient-to-r from-emerald-400 to-teal-500 text-white px-5 py-3 rounded-2xl shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
-        >
-          <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-          <span className="font-semibold whitespace-nowrap">Liên hệ Admin</span>
-        </button>
+          {/* Liên hệ Admin */}
+          <button
+            onClick={() => { setShowLienHe(true); setIsExpanded(false); }}
+            className="group flex items-center gap-2 bg-gradient-to-r from-emerald-400 to-teal-500 text-white px-5 py-3 rounded-2xl shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+          >
+            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span className="font-semibold whitespace-nowrap">Liên hệ Admin</span>
+          </button>
 
-        {/* Yêu cầu làm GDV */}
+          {/* Yêu cầu làm GDV */}
+          <button
+            onClick={() => { setShowYeuCauGDV(true); setIsExpanded(false); }}
+            className="group flex items-center gap-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white px-5 py-3 rounded-2xl shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+          >
+            <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            <span className="font-semibold whitespace-nowrap">Yêu cầu làm GDV</span>
+          </button>
+        </div>
+
+        {/* Header label for FAB */}
+        <div className={`flex items-center gap-2 transition-all duration-300 ${isExpanded ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}>
+          <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg shadow-violet-500/30 animate-pulse">
+            Menu ✨
+          </span>
+        </div>
+
+        {/* Main FAB toggle button */}
         <button
-          onClick={() => setShowYeuCauGDV(true)}
-          className="group flex items-center gap-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white px-5 py-3 rounded-2xl shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className={`group relative w-14 h-14 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-500/40 hover:shadow-xl hover:shadow-violet-500/50 transition-all duration-300 hover:scale-110 flex items-center justify-center ${isExpanded ? 'rotate-45' : ''}`}
         >
-          <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          {/* Glow effect */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 blur-lg opacity-50 animate-pulse"></div>
+          <svg className="w-7 h-7 transition-transform duration-300 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
           </svg>
-          <span className="font-semibold whitespace-nowrap">Yêu cầu làm GDV</span>
         </button>
       </div>
 
+      {/* Overlay to close expanded menu */}
+      {isExpanded && (
+        <div
+          className="fixed inset-0 z-30"
+          onClick={() => setIsExpanded(false)}
+        />
+      )}
+
       {/* Modal Nội quy giao dịch */}
       {showNoiQuy && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4"
           onClick={() => setShowNoiQuy(false)}
         >
-          <div 
+          <div
             className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto animate-modal-enter border border-white/20"
             onClick={(e) => e.stopPropagation()}
           >
@@ -64,7 +95,7 @@ export default function FloatingButtons() {
                 </div>
                 Nội quy giao dịch
               </h2>
-              <button 
+              <button
                 onClick={() => setShowNoiQuy(false)}
                 className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition-all hover:rotate-90"
               >
@@ -109,11 +140,11 @@ export default function FloatingButtons() {
 
       {/* Modal Liên hệ Admin */}
       {showLienHe && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4"
           onClick={() => setShowLienHe(false)}
         >
-          <div 
+          <div
             className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-md w-full animate-modal-enter border border-white/20"
             onClick={(e) => e.stopPropagation()}
           >
@@ -126,7 +157,7 @@ export default function FloatingButtons() {
                 </div>
                 Liên hệ Admin
               </h2>
-              <button 
+              <button
                 onClick={() => setShowLienHe(false)}
                 className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition-all hover:rotate-90"
               >
@@ -139,11 +170,11 @@ export default function FloatingButtons() {
               <p className="text-slate-600 text-center text-sm">
                 Nếu bạn có thắc mắc hoặc cần hỗ trợ, vui lòng liên hệ Admin qua các kênh sau:
               </p>
-              
+
               <div className="space-y-3">
-                <a 
-                  href="https://zalo.me/0123456789" 
-                  target="_blank" 
+                <a
+                  href="https://zalo.me/0123456789"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 rounded-2xl transition-all duration-300 border border-blue-100 hover:shadow-md"
                 >
@@ -161,15 +192,15 @@ export default function FloatingButtons() {
                   </svg>
                 </a>
 
-                <a 
-                  href="https://facebook.com/admin" 
-                  target="_blank" 
+                <a
+                  href="https://facebook.com/admin"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 rounded-2xl transition-all duration-300 border border-blue-100 hover:shadow-md"
                 >
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/30 group-hover:scale-110 transition-transform">
                     <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                     </svg>
                   </div>
                   <div>
@@ -181,7 +212,7 @@ export default function FloatingButtons() {
                   </svg>
                 </a>
 
-                <a 
+                <a
                   href="tel:0123456789"
                   className="group flex items-center gap-4 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 rounded-2xl transition-all duration-300 border border-emerald-100 hover:shadow-md"
                 >
@@ -206,11 +237,11 @@ export default function FloatingButtons() {
 
       {/* Modal Yêu cầu làm GDV */}
       {showYeuCauGDV && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4"
           onClick={() => setShowYeuCauGDV(false)}
         >
-          <div 
+          <div
             className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto animate-modal-enter border border-white/20"
             onClick={(e) => e.stopPropagation()}
           >
@@ -223,7 +254,7 @@ export default function FloatingButtons() {
                 </div>
                 Yêu cầu làm GDV
               </h2>
-              <button 
+              <button
                 onClick={() => setShowYeuCauGDV(false)}
                 className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition-all hover:rotate-90"
               >
@@ -236,7 +267,7 @@ export default function FloatingButtons() {
               <p className="text-slate-600 text-center text-sm mb-4">
                 Để trở thành GDV chính thức, bạn cần đáp ứng các yêu cầu sau:
               </p>
-              
+
               <div className="space-y-3">
                 <div className="flex gap-4 items-start p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
                   <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md">1</span>
@@ -259,7 +290,7 @@ export default function FloatingButtons() {
                   <p className="pt-1">Tham gia đào tạo và kiểm tra năng lực nếu được yêu cầu.</p>
                 </div>
               </div>
-              
+
               <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl">
                 <p className="text-amber-700 font-medium text-sm flex items-center gap-2">
                   <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -268,7 +299,7 @@ export default function FloatingButtons() {
                   Lưu ý: Việc đăng ký sẽ được xem xét và phê duyệt bởi Admin. Thời gian xử lý có thể mất 1-3 ngày làm việc.
                 </p>
               </div>
-              
+
               <div className="mt-6 flex justify-center">
                 <a
                   href="#" // Placeholder link - user will provide the actual link

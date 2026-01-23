@@ -1,4 +1,4 @@
- 'use client'
+'use client'
 
 import Image from 'next/image'
 import { useState } from 'react'
@@ -27,7 +27,7 @@ export default function GDVAvatar({ gdv, index, onClick }: GDVAvatarProps) {
   const [imageError, setImageError] = useState(false)
 
   return (
-    <div 
+    <div
       onClick={onClick}
       className="flex flex-col items-center cursor-pointer group"
     >
@@ -35,10 +35,10 @@ export default function GDVAvatar({ gdv, index, onClick }: GDVAvatarProps) {
       <div className="relative avatar-hover">
         {/* Glow effect khi hover */}
         <div className={`absolute -inset-2 bg-gradient-to-r ${gradient} rounded-full opacity-0 group-hover:opacity-60 transition-all duration-500 blur-xl`}></div>
-        
+
         {/* Ring gradient khi hover */}
         <div className={`absolute -inset-1 bg-gradient-to-r ${gradient} rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300`}></div>
-        
+
         <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-white/80 shadow-lg group-hover:shadow-2xl transition-all duration-300 bg-white">
           {gdv.avatar_url && !imageError ? (
             <Image
@@ -54,15 +54,13 @@ export default function GDVAvatar({ gdv, index, onClick }: GDVAvatarProps) {
             </div>
           )}
         </div>
-        
+
         {/* Số thứ tự - compact professional badge */}
-        <div className="absolute -top-2 -left-2 flex items-center gap-2 bg-white/8 backdrop-blur-sm border border-white/10 rounded-md px-2 py-0.5 shadow-sm group-hover:scale-105 transition-transform duration-200">
-          <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-indigo-600 text-white text-xs font-semibold shadow-sm">
-            {index}
-          </div>
+        <div className="absolute -top-2 -left-2 w-6 h-6 flex items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-indigo-600 text-white text-xs font-semibold shadow-lg group-hover:scale-110 transition-transform duration-200">
+          {index}
         </div>
       </div>
-      
+
       {/* Tên với hiệu ứng gradient khi hover */}
       <p className="mt-3 text-xs sm:text-sm text-center text-slate-700 font-medium line-clamp-2 max-w-[80px] sm:max-w-[100px] group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-fuchsia-600 group-hover:bg-clip-text transition-all duration-300">
         {gdv.ho_ten}
