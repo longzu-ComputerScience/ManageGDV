@@ -107,7 +107,7 @@ export default function HomePage() {
           headers={[
             {
               title: 'Danh sách Giao dịch viên',
-              subtitle: `Tìm và kết nối với ${totalGdvCount} giao dịch viên của chúng tôi`,
+              subtitle: `Tìm và kết nối với ${totalGdvCount} GDV của chúng tôi`,
             },
             {
               title: 'Admin Kiều Thị Thanh Huyền',
@@ -194,6 +194,12 @@ export default function HomePage() {
         <>
           {filteredGdvList.length > 0 && (
             <div className="glass-card rounded-3xl p-8">
+              <div className="flex flex-col items-center mb-6">
+                <h2 className="text-xl sm:text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
+                  GDV Được Bảo Kê
+                </h2>
+                <div className="mt-2 h-1 w-20 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 shadow-md shadow-amber-500/40"></div>
+              </div>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 gap-5 md:gap-7">
                 {filteredGdvList.map((gdv, index) => (
                   <GDVAvatar

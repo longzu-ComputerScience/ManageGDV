@@ -220,12 +220,14 @@ export default function GDVModal({ gdv, onClose }: GDVModalProps) {
             )}
 
             {gdv.mo_ta && (
-              <div className="pt-3 border-t border-slate-100">
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-2 font-semibold flex items-center gap-2">
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-700/60">
+                <p className="text-xs text-slate-500 dark:text-slate-300 uppercase tracking-wide mb-2 font-semibold flex items-center gap-2">
                   <span className="w-2 h-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full"></span>
                   Ghi chú
                 </p>
-                <p className="text-slate-700 text-sm leading-relaxed bg-gradient-to-r from-slate-50 to-slate-100/50 p-3 rounded-xl border border-slate-100">{gdv.mo_ta}</p>
+                <p className="text-slate-700 dark:text-slate-100 text-sm leading-relaxed bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-800/70 dark:to-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/60">
+                  {gdv.mo_ta}
+                </p>
               </div>
             )}
           </div>
@@ -233,7 +235,7 @@ export default function GDVModal({ gdv, onClose }: GDVModalProps) {
           {/* Social Links */}
           {(gdv.facebook || gdv.zalo) && (
             <div className="px-6 pb-5 bg-white">
-              <p className="text-xs text-slate-500 uppercase tracking-wide mb-3 font-semibold flex items-center gap-2">
+              <p className="text-xs text-slate-500 dark:text-slate-300 uppercase tracking-wide mb-3 font-semibold flex items-center gap-2">
                 <span className="w-2 h-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span>
                 Liên hệ qua MXH
               </p>
@@ -300,13 +302,13 @@ function InfoRow({ icon, label, value, gradient }: {
   gradient?: string
 }) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-100 hover:shadow-md hover:border-slate-200 transition-all duration-300 group">
+    <div className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-800/70 dark:to-slate-900/50 border border-slate-100 dark:border-slate-700/60 hover:shadow-md hover:border-slate-200 dark:hover:border-slate-600/60 transition-all duration-300 group">
       <div className={`w-10 h-10 bg-gradient-to-br ${gradient || 'from-violet-500 to-fuchsia-500'} rounded-xl flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform`}>
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-slate-500 font-medium">{label}</p>
-        <p className="text-slate-800 text-sm font-semibold truncate">{value}</p>
+        <p className="text-xs text-slate-500 dark:text-slate-300 font-medium">{label}</p>
+        <p className="text-slate-800 dark:text-slate-100 text-sm font-semibold truncate">{value}</p>
       </div>
     </div>
   )
@@ -321,19 +323,19 @@ function InfoRowWithCopy({ icon, label, value, onCopy, copied, gradient }: {
   gradient?: string
 }) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-100 hover:shadow-md hover:border-slate-200 transition-all duration-300 group">
+    <div className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-800/70 dark:to-slate-900/50 border border-slate-100 dark:border-slate-700/60 hover:shadow-md hover:border-slate-200 dark:hover:border-slate-600/60 transition-all duration-300 group">
       <div className={`w-10 h-10 bg-gradient-to-br ${gradient || 'from-violet-500 to-fuchsia-500'} rounded-xl flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform`}>
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-slate-500 font-medium">{label}</p>
-        <p className="text-slate-800 text-sm font-semibold truncate">{value}</p>
+        <p className="text-xs text-slate-500 dark:text-slate-300 font-medium">{label}</p>
+        <p className="text-slate-800 dark:text-slate-100 text-sm font-semibold truncate">{value}</p>
       </div>
       <button
         onClick={onCopy}
         className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${copied
           ? 'bg-gradient-to-r from-emerald-400 to-teal-500 text-white shadow-md shadow-emerald-500/30'
-          : 'bg-white hover:bg-gradient-to-r hover:from-violet-500 hover:to-fuchsia-500 text-slate-500 hover:text-white shadow-sm hover:shadow-md hover:shadow-violet-500/30'
+          : 'bg-white dark:bg-slate-800/70 hover:bg-gradient-to-r hover:from-violet-500 hover:to-fuchsia-500 text-slate-500 dark:text-slate-200 hover:text-white shadow-sm hover:shadow-md hover:shadow-violet-500/30'
           }`}
         title={copied ? 'Đã sao chép!' : 'Sao chép'}
       >

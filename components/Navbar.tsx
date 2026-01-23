@@ -20,6 +20,7 @@ export default function Navbar() {
   const tickingRef = useRef(false)
   const accumDeltaRef = useRef(0)
   const lastDirectionRef = useRef<'up' | 'down' | 'none'>('none')
+  const lastToggleRef = useRef(0)
 
   const setHidden = (value: boolean) => {
     setHideTopBar(prev => (prev === value ? prev : value))
@@ -33,9 +34,13 @@ export default function Navbar() {
 
     // Check saved theme
     const savedTheme = localStorage.getItem('theme')
-    if (savedTheme === 'dark') {
+    if (savedTheme === 'light') {
+      setIsDark(false)
+      document.body.classList.remove('dark')
+    } else {
       setIsDark(true)
       document.body.classList.add('dark')
+      if (!savedTheme) localStorage.setItem('theme', 'dark')
     }
 
     return () => {
@@ -55,13 +60,14 @@ export default function Navbar() {
         const absDelta = Math.abs(delta)
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight
         const nearTop = currentScrollY < 20
-        const nearBottom = maxScroll - currentScrollY < 20
+        const nearBottom = maxScroll - currentScrollY < 80
+        const now = Date.now()
 
         if (nearTop) {
           setHidden(false)
           accumDeltaRef.current = 0
           lastDirectionRef.current = 'none'
-        } else if (!nearBottom && absDelta > 3) {
+        } else if (!nearBottom && absDelta > 4 && now - lastToggleRef.current > 240) {
           const direction = delta > 0 ? 'down' : delta < 0 ? 'up' : lastDirectionRef.current
 
           if (direction !== lastDirectionRef.current) {
@@ -71,14 +77,16 @@ export default function Navbar() {
 
           accumDeltaRef.current += delta
 
-          if (direction === 'down' && accumDeltaRef.current > 60 && currentScrollY > 100) {
+          if (direction === 'down' && accumDeltaRef.current > 90 && currentScrollY > 120) {
             setHidden(true)
             accumDeltaRef.current = 0
+            lastToggleRef.current = now
           }
 
-          if (direction === 'up' && accumDeltaRef.current < -40) {
+          if (direction === 'up' && accumDeltaRef.current < -70) {
             setHidden(false)
             accumDeltaRef.current = 0
+            lastToggleRef.current = now
           }
         }
 
@@ -161,9 +169,9 @@ export default function Navbar() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 bg-clip-text text-transparent">
-                  CI24
-                </span>
+              <span className="text-xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 bg-clip-text text-transparent">
+                CheckLegit 24h
+              </span>
               </div>
               <div className="hidden md:flex ml-10 space-x-1">
                 <Link

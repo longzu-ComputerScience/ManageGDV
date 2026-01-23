@@ -453,7 +453,7 @@ export default function GDVForm({ initialData, onSubmit, submitLabel = 'Lưu', s
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-md font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 h-12 bg-primary-600 hover:bg-primary-700 text-white px-6 rounded-md text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? 'Đang xử lý...' : submitLabel}
         </button>

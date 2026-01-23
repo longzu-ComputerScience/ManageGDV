@@ -1,18 +1,24 @@
 'use client'
 
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 export default function FloatingButtons() {
+  const pathname = usePathname()
   const [showLienHe, setShowLienHe] = useState(false)
   const [showYeuCauGDV, setShowYeuCauGDV] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
 
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
+
   return (
     <>
       {/* Floating Action Button */}
-      <div className="fixed bottom-16 right-4 md:bottom-20 md:right-10 z-40 flex flex-col items-end gap-3">
+      <div className="fixed bottom-12 right-4 md:bottom-20 md:right-10 z-40 flex flex-col items-end gap-2">
         {/* Expanded menu items */}
-        <div className={`flex flex-col items-end gap-3 transition-all duration-300 ${isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+        <div className={`flex flex-col items-end gap-2 transition-all duration-300 ${isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
           {/* Liên hệ Admin */}
           <button
             onClick={() => { setShowLienHe(true); setIsExpanded(false); }}
