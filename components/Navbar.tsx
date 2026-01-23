@@ -17,6 +17,9 @@ export default function Navbar() {
   const [hideTopBar, setHideTopBar] = useState(false)
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const lastScrollYRef = useRef(0)
+  const tickingRef = useRef(false)
+  const accumDeltaRef = useRef(0)
+  const lastDirectionRef = useRef<'up' | 'down' | 'none'>('none')
 
   useEffect(() => {
     checkUser()
@@ -38,18 +41,43 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      const isScrollingDown = currentScrollY > lastScrollYRef.current
+      if (tickingRef.current) return
+      tickingRef.current = true
 
-      if (currentScrollY < 10) {
-        setHideTopBar(false)
-      } else if (isScrollingDown && currentScrollY > 80) {
-        setHideTopBar(true)
-      } else if (!isScrollingDown) {
-        setHideTopBar(false)
-      }
+      requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY
+        const lastScrollY = lastScrollYRef.current
+        const delta = currentScrollY - lastScrollY
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+        const nearTop = currentScrollY < 20
+        const nearBottom = maxScroll - currentScrollY < 20
 
-      lastScrollYRef.current = currentScrollY
+        if (nearTop) {
+          setHideTopBar(false)
+        } else if (!nearBottom) {
+          const direction = delta > 0 ? 'down' : delta < 0 ? 'up' : lastDirectionRef.current
+
+          if (direction !== lastDirectionRef.current) {
+            accumDeltaRef.current = 0
+            lastDirectionRef.current = direction
+          }
+
+          accumDeltaRef.current += delta
+
+          if (direction === 'down' && accumDeltaRef.current > 60 && currentScrollY > 100) {
+            setHideTopBar(true)
+            accumDeltaRef.current = 0
+          }
+
+          if (direction === 'up' && accumDeltaRef.current < -40) {
+            setHideTopBar(false)
+            accumDeltaRef.current = 0
+          }
+        }
+
+        lastScrollYRef.current = currentScrollY
+        tickingRef.current = false
+      })
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -111,8 +139,8 @@ export default function Navbar() {
     <nav className="bg-white/80 backdrop-blur-xl border-b border-slate-200/50 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
-          className={`flex justify-between h-16 transition-all duration-300 overflow-hidden md:overflow-visible md:opacity-100 md:translate-y-0 md:h-16 ${hideTopBar
-            ? 'max-h-0 opacity-0 -translate-y-4 pointer-events-none md:max-h-none'
+          className={`flex justify-between h-16 transition-[max-height,opacity,transform] duration-300 overflow-hidden md:overflow-visible md:opacity-100 md:translate-y-0 md:h-16 will-change-transform ${hideTopBar
+            ? 'max-h-0 opacity-0 -translate-y-3 pointer-events-none md:max-h-none'
             : 'max-h-20 opacity-100 translate-y-0'
             }`}
         >
