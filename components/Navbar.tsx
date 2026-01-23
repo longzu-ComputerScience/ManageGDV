@@ -145,13 +145,13 @@ export default function Navbar() {
   return (
     <nav className="bg-white/80 backdrop-blur-xl border-b border-slate-200/50 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative h-16">
-          <div
-            className={`absolute inset-0 flex justify-between items-center transition-transform duration-300 will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${hideTopBar
-              ? '-translate-y-full opacity-0 pointer-events-none'
-              : 'translate-y-0 opacity-100'
-              }`}
-          >
+        <div
+          className={`overflow-hidden transition-[max-height,opacity] duration-300 will-change-[max-height,opacity] md:overflow-visible md:max-h-16 md:opacity-100 md:pointer-events-auto ${hideTopBar
+            ? 'max-h-0 opacity-0 pointer-events-none'
+            : 'max-h-16 opacity-100'
+            }`}
+        >
+          <div className="h-16 flex justify-between items-center">
             <div className="flex items-center">
               <div className="flex items-center group cursor-pointer" onClick={handleLogoClick}>
                 <div className="w-12 h-12 rounded-xl overflow-hidden mr-3 shadow-lg shadow-violet-500/30 group-hover:shadow-violet-500/50 transition-all duration-300 group-hover:scale-105">
@@ -346,10 +346,10 @@ export default function Navbar() {
                   Đăng xuất
                 </button>
               </>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
     </nav>
   )
 }
