@@ -1,5 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingButtons from '@/components/FloatingButtons'
@@ -38,7 +39,9 @@ export default function RootLayout({
 
         <div className="min-h-screen flex flex-col relative">
           <Navbar />
-          <TopProgress />
+          <Suspense fallback={null}>
+            <TopProgress />
+          </Suspense>
           <main className="flex-grow">
             {children}
           </main>
